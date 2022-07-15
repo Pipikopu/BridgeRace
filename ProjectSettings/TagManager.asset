@@ -3,12 +3,28 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - BlueBrick
+  - RedBrick
+  - YellowBrick
+  - GreenBrick
+  - Block
+  - BlueStep
+  - RedStep
+  - GreenStep
+  - YellowStep
+  - WhiteStep
+  - Bridge
+  - NewStage
+  - PlayerBlueBrick
+  - PlayerRedBrick
+  - PlayerGreenBrick
+  - PlayerYellowBrick
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Step
   - Water
   - UI
   - 
