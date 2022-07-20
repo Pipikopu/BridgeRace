@@ -88,6 +88,11 @@ public static class SimplePool
         }
     }
 
+    public static Vector3 GetFirstAcObjPos(GameUnit prefab, Vector3 defaultPosition)
+    {
+        return poolObjects[prefab].GetFirstAcObjPos(defaultPosition);
+    }
+
     public class Pool
     {
         Queue<GameUnit> pools = new Queue<GameUnit>();
@@ -186,6 +191,18 @@ public static class SimplePool
             {
                 GameUnit obj = pools.Dequeue();
                 GameObject.Destroy(obj);
+            }
+        }
+
+        public Vector3 GetFirstAcObjPos(Vector3 defaultPosition)
+        {
+            if (activeObjs.Count > 0)
+            {
+                return activeObjs[0].transform.position;
+            }
+            else
+            {
+                return defaultPosition;
             }
         }
     }

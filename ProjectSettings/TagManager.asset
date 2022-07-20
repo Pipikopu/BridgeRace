@@ -20,6 +20,7 @@ TagManager:
   - PlayerRedBrick
   - PlayerGreenBrick
   - PlayerYellowBrick
+  - Ground
   layers:
   - Default
   - TransparentFX
@@ -27,9 +28,9 @@ TagManager:
   - Step
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Player
+  - Enemy
+  - Wall
   - 
   - 
   - 

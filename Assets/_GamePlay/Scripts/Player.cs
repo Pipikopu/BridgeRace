@@ -142,7 +142,7 @@ public class Player : MonoBehaviour
 
     void MoveCharacter(Vector3 direction)
     {
-        playerRb.velocity = direction * moveSpeed;
+        playerRb.velocity = direction * moveSpeed * Time.deltaTime;
     }
 
     private void BuildStep(GameObject colliderObj)
@@ -197,6 +197,12 @@ public class Player : MonoBehaviour
                 case Constant.FINISH_TAG:
                     collider.tag = Constant.UNTAGGED_TAG;
                     Win();
+                    break;
+                case "Bridge":
+                    Debug.Log("OnBridge");
+                    break;
+                case "Ground":
+                    Debug.Log("OnGround");
                     break;
             }
         }

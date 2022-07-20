@@ -14,6 +14,7 @@ public class PoolController : MonoBehaviour
 
     public Transform tf_blueStackHolder;
     public Transform tf_redStackHolder;
+    public Transform tf_greenStackHolder;
 
     public Transform tf_steps;
 
@@ -25,8 +26,10 @@ public class PoolController : MonoBehaviour
     public Brick greenBrick;
     public Brick blueBrick;
     public Brick yellowBrick;
+
     public Stack blueStack;
     public Stack redStack;
+    public Stack greenStack;
 
     public Step step;
     private int numOfStepsPerSlide;
@@ -67,6 +70,7 @@ public class PoolController : MonoBehaviour
 
         SimplePool.Preload(blueStack, 30, tf_blueStackHolder); ;
         SimplePool.Preload(redStack, 30, tf_redStackHolder); ;
+        SimplePool.Preload(greenStack, 30, tf_greenStackHolder); ;
 
         SimplePool.Preload(step, 30, tf_steps);
     }
@@ -128,7 +132,7 @@ public class PoolController : MonoBehaviour
     IEnumerator spawnDelay(Transform poolTf, Brick brick, int i, int j)
     {
         yield return new WaitForSeconds(Random.Range(0.1f, 1f));
-        SimplePool.Spawn(brick, poolTf.position + new Vector3(j * 0.18f, 0, i * 0.2f), poolTf.rotation);
+        SimplePool.Spawn(brick, poolTf.position + new Vector3(j * 0.3f, 0, i * 0.4f), poolTf.rotation);
     }
 
     private void LoadBrick(int[,] map, Transform poolTf, Brick brick)
