@@ -30,6 +30,20 @@ public static class SimplePool
         return obj;
     }
 
+    public static GameUnit SpawnWithParent(GameUnit prefab, Vector3 position, Quaternion rotation, Transform newParent)
+    {
+        GameUnit obj = null;
+
+        if (!poolObjects.ContainsKey(prefab) || poolObjects[prefab] == null)
+        {
+            poolObjects.Add(prefab, new Pool(prefab, DEFAULT_AMOUNT, null));
+        }
+
+        obj = poolObjects[prefab].SpawnWithParent(position, rotation, newParent);
+
+        return obj;
+    }
+
     public static void SpawnOldest(GameUnit prefab)
     {
         if (!poolObjects.ContainsKey(prefab) || poolObjects[prefab] == null)
@@ -51,19 +65,27 @@ public static class SimplePool
         }
     }
 
-    public static void DespawnOldest(GameUnit prefab)
+    public static GameUnit DespawnOldest(GameUnit prefab)
     {
         if (poolObjects.ContainsKey(prefab))
         {
-            poolObjects[prefab].DespawnOldest();
+            return poolObjects[prefab].DespawnOldest();
+        }
+        else
+        {
+            return null;
         }
     }
 
-    public static void DespawnNewest(GameUnit prefab)
+    public static GameUnit DespawnNewest(GameUnit prefab)
     {
         if (poolObjects.ContainsKey(prefab))
         {
-            poolObjects[prefab].DespawnNewest();
+            return poolObjects[prefab].DespawnNewest();
+        }
+        else
+        {
+            return null;
         }
     }
 
@@ -136,6 +158,28 @@ public static class SimplePool
             return obj;
         }
 
+        public GameUnit SpawnWithParent(Vector3 position, Quaternion rotation, Transform newParent)
+        {
+            GameUnit obj = null;
+
+            if (pools.Count == 0)
+            {
+                obj = GameObject.Instantiate(prefab, newParent);
+                poolParents.Add(obj, this);
+            }
+            else
+            {
+                obj = pools.Dequeue();
+            }
+
+            obj.transform.SetPositionAndRotation(position, rotation);
+            new WaitForSeconds(Random.Range(1f, 5f));
+            obj.gameObject.SetActive(true);
+
+            activeObjs.Add(obj);
+            return obj;
+        }
+
         public void SpawnOldest()
         {
             if (pools.Count > 0)
@@ -153,7 +197,7 @@ public static class SimplePool
             obj.gameObject.SetActive(false);
         }
 
-        public void DespawnOldest()
+        public GameUnit DespawnOldest()
         {
             if (activeObjs.Count > 0)
             {
@@ -161,17 +205,27 @@ public static class SimplePool
                 activeObjs.RemoveAt(0);
                 pools.Enqueue(obj);
                 obj.gameObject.SetActive(false);
+                return obj;
+            }
+            else
+            {
+                return null;
             }
         }
 
-        public void DespawnNewest()
+        public GameUnit DespawnNewest()
         {
             if (activeObjs.Count > 0)
             {
                 GameUnit obj = activeObjs[activeObjs.Count - 1];
-                activeObjs.RemoveAt(activeObjs.Count -  1);
+                activeObjs.RemoveAt(activeObjs.Count - 1);
                 pools.Enqueue(obj);
                 obj.gameObject.SetActive(false);
+                return obj;
+            }
+            else
+            {
+                return null;
             }
         }
 

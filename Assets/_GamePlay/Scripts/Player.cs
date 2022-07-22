@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Player : MonoBehaviour
 {
@@ -42,13 +43,19 @@ public class Player : MonoBehaviour
 
     // Player and Other Players
     public Player thisPlayer;
-    public List<Player> otherPlayers = new List<Player>();
+    public List<Enemy> otherEnemies = new List<Enemy>();
 
     // Other variables
     private bool isFall;
     public Animator playerAnimator;
     public Transform winTransform;
     private bool isWin;
+
+    private bool isOnBridge;
+
+    public Brick normalBrick;
+
+    private int currentStage;
 
     void Start()
     {
@@ -57,17 +64,24 @@ public class Player : MonoBehaviour
 
     private void OnInit()
     {
+        currentStage = 0;
         inputX = 0;
         inputZ = 0;
         numOfStacks = 0;
         isWin = false;
         isFall = false;
+        isOnBridge = false;
         layer_mask = LayerMask.GetMask(Constant.MASK_STEP);
     }
 
     void Update()
     {
-        if (!isWin)
+        if (isWin)
+        {
+            StartCoroutine(openEndGameMenu());
+            return;
+        }
+        if (!isFall)
         {
             Move();
         }
@@ -94,7 +108,7 @@ public class Player : MonoBehaviour
             inputZ = 0;
         }
 
-        if (OnBridge())
+        if (isOnBridge && movement.z < 0)
         {
             movement = new Vector3(inputX, inputZ * 0.7f, inputZ);
         }
@@ -106,7 +120,7 @@ public class Player : MonoBehaviour
 
     public bool CanGo()
     {
-        if (Physics.Raycast(playerTransform.position + Vector3.up * 0.05f, Vector3.forward, out RaycastHit hit, 0.08f, layer_mask))
+        if (Physics.Raycast(playerTransform.position + Vector3.up * 0.05f, Vector3.forward, out RaycastHit hit, 0.1f, layer_mask))
         {
             if (hit.collider.tag == stepTag)
             {
@@ -126,18 +140,12 @@ public class Player : MonoBehaviour
         return true;
     }
 
-    public bool OnBridge()
-    {
-        if (Physics.Raycast(playerTransform.position, Vector3.forward, out RaycastHit hit, 0.1f, layer_mask))
-        {
-            return true;
-        }
-        return false;
-    }
-
     private void FixedUpdate()
     {
-        MoveCharacter(movement);
+        if (!isFall || !isWin)
+        {
+            MoveCharacter(movement);
+        }
     }
 
     void MoveCharacter(Vector3 direction)
@@ -165,23 +173,24 @@ public class Player : MonoBehaviour
         {
             return;
         }
-        if (collider.CompareTag(brickTag.ToString()))
+        if (collider.CompareTag(brickTag.ToString())|| collider.CompareTag("NormalBrick"))
         {
-            Stack();
+            Stack(collider.gameObject);
         }
         else if (collider.tag.Contains("Player"))
         {
-            foreach(Player otherPlayer in otherPlayers)
+            if (isOnBridge)
             {
-                if (collider.CompareTag(otherPlayer.gameObject.tag))
+                return;
+            }
+            foreach (Enemy otherEnemy in otherEnemies)
+            {
+                if (collider.CompareTag(otherEnemy.gameObject.tag))
                 {
-                    if (OnBridge())
-                    {
-                        return;
-                    }
-                    else if (thisPlayer.GetNumOfStacks() < otherPlayer.GetNumOfStacks())
+                    if (thisPlayer.GetNumOfStacks() < otherEnemy.GetNumOfStacks())
                     {
                         Fall();
+                        return;
                     }
                 }
             }
@@ -191,18 +200,19 @@ public class Player : MonoBehaviour
             switch (collider.tag)
             {
                 case Constant.NEW_STAGE_TAG:
+                    currentStage++;
                     collider.tag = Constant.UNTAGGED_TAG;
-                    poolController.LoadStageOne(brick);
+                    poolController.LoadABrickInMap(currentStage, brick);
                     break;
                 case Constant.FINISH_TAG:
                     collider.tag = Constant.UNTAGGED_TAG;
                     Win();
                     break;
                 case "Bridge":
-                    Debug.Log("OnBridge");
+                    isOnBridge = true;
                     break;
                 case "Ground":
-                    Debug.Log("OnGround");
+                    isOnBridge = false;
                     break;
             }
         }
@@ -213,9 +223,9 @@ public class Player : MonoBehaviour
         return numOfStacks;
     }
 
-    private void Stack()
+    private void Stack(GameObject colliderObj)
     {
-        SimplePool.Spawn(stackPrefab, stackHolder.position + stackHolder.up * numOfStacks * 0.06f, stackHolder.rotation);
+        SimplePool.SpawnWithParent(stackPrefab, stackHolder.position + stackHolder.up * numOfStacks * 0.06f, stackHolder.rotation, stackHolder);
         numOfStacks++;
     }
 
@@ -239,14 +249,19 @@ public class Player : MonoBehaviour
         playerAnimator.SetBool(Constant.ANIM_IS_FALL, true);
         while (numOfStacks > 0)
         {
-            SimplePool.DespawnNewest(stackPrefab);
-            SimplePool.SpawnOldest(brick);
+            GameUnit stack = SimplePool.DespawnNewest(stackPrefab);
+            SimplePool.Spawn(normalBrick, stack.gameObject.transform.position, stack.gameObject.transform.rotation);
             numOfStacks--;
         }
         isFall = true;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.5f);
         playerAnimator.SetBool(Constant.ANIM_IS_FALL, false);
         isFall = false;
+    }
 
+    IEnumerator openEndGameMenu()
+    {
+        yield return new WaitForSeconds(3f);
+        UIManager.Ins.onOpenWinGameMenu();
     }
 }

@@ -4,107 +4,96 @@ using UnityEngine;
 
 public class PoolController : MonoBehaviour
 {
-    public Transform poolTransform;
-    public Transform newPoolTransform;
+    [Header("Map Variables")]
+    private List<int[,]> mapStagesMatrix = new List<int[,]>();
+    public List<Transform> mapStartPoints;
 
-    public Transform tf_redBrick;
-    public Transform tf_greenBrick;
-    public Transform tf_blueBrick;
-    public Transform tf_yellowBrick;
+    public int mapSizeZ = 10;
+    public int mapSizeX = 12;
 
-    public Transform tf_blueStackHolder;
-    public Transform tf_redStackHolder;
-    public Transform tf_greenStackHolder;
 
-    public Transform tf_steps;
+    [Header("Brick Variables")]
+    public int totalNumOfBricks = 120;
+    public int numOfEachBrickColor = 30;
 
-    public Transform tf_steps_0;
-    public Transform tf_steps_1;
-    public Transform tf_steps_2;
+    public List<Brick> brickPrefabs;
+    public List<Transform> brickHolderTransforms;
 
-    public Brick redBrick;
-    public Brick greenBrick;
-    public Brick blueBrick;
-    public Brick yellowBrick;
+    public Brick normalBrick;
+    public Transform normalBrickHolder;
 
-    public Stack blueStack;
-    public Stack redStack;
-    public Stack greenStack;
 
+    [Header("Stack Variables")]
+    public List<Transform> stackHolderTransforms;
+    public List<Stack> stackPrefabs;
+
+
+    [Header("Step Variables")]
     public Step step;
-    private int numOfStepsPerSlide;
+    public List<Transform> stepHolders;
+    public List<int> numOfStepInSlices;
 
-    private int brickIndex;
 
+    [Header("Support Variables")]
+    private int currentBrickIndex;
+    private List<int> sampleMap = new List<int>();
     private Dictionary<GameObject, Renderer> objRenDict = new Dictionary<GameObject, Renderer>();
 
-    // RED = 0, GREEN = 1, BLUE = 2, YELLOW = 3
-    private int[,] map2D = new int[,] { { 0, 1, 3, 2, 3, 2, 0, 2, 2, 3, 1, 2},
-                                        { 3, 2, 3, 2, 1, 0, 1, 0, 3, 3, 2, 2},
-                                        { 3, 1, 3, 3, 0, 2, 2, 3, 2, 0, 0, 1},
-                                        { 1, 2, 1, 2, 0, 1, 0, 3, 0, 3, 3, 0},
-                                        { 1, 1, 0, 0, 1, 0, 3, 2, 2, 1, 0, 2},
-                                        { 0, 2, 0, 3, 3, 0, 2, 3, 1, 0, 3, 1},
-                                        { 1, 3, 3, 2, 1, 1, 1, 0, 3, 1, 0, 0},
-                                        { 1, 2, 1, 2, 3, 0, 3, 1, 1, 0, 1, 1},
-                                        { 2, 2, 0, 1, 1, 0, 3, 0, 1, 3, 3, 2},
-                                        { 2, 3, 3, 2, 0, 2, 3, 2, 2, 0, 1, 0} };
-
-    private int[,] newMap2D = new int[,] { { 0, 1, 3, 2, 3, 2, 0, 2, 2, 3, 1, 2},
-                                            { 3, 2, 3, 2, 1, 0, 1, 0, 3, 3, 2, 2},
-                                            { 3, 1, 3, 3, 0, 2, 2, 3, 2, 0, 0, 1},
-                                            { 1, 2, 1, 2, 0, 1, 0, 3, 0, 3, 3, 0},
-                                            { 1, 1, 0, 0, 1, 0, 3, 2, 2, 1, 0, 2},
-                                            { 0, 2, 0, 3, 3, 0, 2, 3, 1, 0, 3, 1},
-                                            { 1, 3, 3, 2, 1, 1, 1, 0, 3, 1, 0, 0},
-                                            { 1, 2, 1, 2, 3, 0, 3, 1, 1, 0, 1, 1},
-                                            { 2, 2, 0, 1, 1, 0, 3, 0, 1, 3, 3, 2},
-                                            { 2, 3, 3, 2, 0, 2, 3, 2, 2, 0, 1, 0} };
 
     private void Awake()
     {
-        SimplePool.Preload(redBrick, 30, tf_redBrick);
-        SimplePool.Preload(greenBrick, 30, tf_greenBrick);
-        SimplePool.Preload(blueBrick, 30, tf_blueBrick);
-        SimplePool.Preload(yellowBrick, 30, tf_yellowBrick);
+        for (int i = 0; i < mapStartPoints.Count; i++)
+        {
+            mapStagesMatrix.Add(new int[mapSizeZ, mapSizeX]);
+            InitAMapMatrix(mapStagesMatrix[i]);
+        }
 
-        SimplePool.Preload(blueStack, 30, tf_blueStackHolder); ;
-        SimplePool.Preload(redStack, 30, tf_redStackHolder); ;
-        SimplePool.Preload(greenStack, 30, tf_greenStackHolder); ;
+        for (int i = 0; i < brickPrefabs.Count; i++)
+        {
+            SimplePool.Preload(brickPrefabs[i], numOfEachBrickColor, brickHolderTransforms[i]);
+        }
 
-        SimplePool.Preload(step, 30, tf_steps);
+        SimplePool.Preload(normalBrick, numOfEachBrickColor * 2, normalBrickHolder);
+
+        for (int i = 0; i < stackPrefabs.Count; i++)
+        {
+            SimplePool.Preload(stackPrefabs[i], numOfEachBrickColor * 2, stackHolderTransforms[i]);
+        }
+
     }
 
     private void Start()
     {
-        brickIndex = 0;
-        InitBricks();
 
-        numOfStepsPerSlide = 10;
+        for (int i = 0; i < brickPrefabs.Count; i++)
+        {
+            LoadABrickInMap(0, brickPrefabs[i]);
+        }
         InitSteps();
     }
 
-    private void InitBricks()
+    private void InitSampleMapList()
     {
+        for (int i = 0; i < brickPrefabs.Count; i++)
+        {
+            for (int j = 0; j < numOfEachBrickColor; j++)
+            {
+                sampleMap.Add(i);
+            }
+        }
+    }
+    
+    private void InitAMapMatrix(int[,] map2D)
+    {
+        InitSampleMapList();
+        List<int> newList = sampleMap;
         for (int i = map2D.GetLength(0) - 1; i >= 0; i--)
         {
             for (int j = 0; j < map2D.GetLength(1); j++)
             {
-                switch (map2D[i, j])
-                {
-                    case 0:
-                        StartCoroutine(spawnDelay(poolTransform, redBrick, i, j));
-                        break;
-                    case 1:
-                        StartCoroutine(spawnDelay(poolTransform, greenBrick, i, j));
-                        break;
-                    case 2:
-                        StartCoroutine(spawnDelay(poolTransform, blueBrick, i, j));
-                        break;
-                    case 3:
-                        StartCoroutine(spawnDelay(poolTransform, yellowBrick, i, j));
-                        break;
-                }
+                int index = Random.Range(0, newList.Count - 1);
+                map2D[i, j] = newList[index];
+                newList.RemoveAt(index);
             }
         }
     }
@@ -113,19 +102,14 @@ public class PoolController : MonoBehaviour
     {
         GameUnit newStep;
         Renderer newRenderer;
-        for (int i = 0; i < numOfStepsPerSlide; i++)
+        for (int i = 0; i < stepHolders.Count; i++)
         {
-            newStep = SimplePool.Spawn(step, tf_steps_0.position + new Vector3(0, 0.05f + 0.1f * i, 0.15f + 0.3f * i), tf_steps.rotation);
-            newRenderer = newStep.GetComponent<Renderer>();
-            objRenDict.Add(newStep.gameObject, newRenderer);
-
-            newStep = SimplePool.Spawn(step, tf_steps_1.position + new Vector3(0, 0.05f + 0.1f * i, 0.15f + 0.3f * i), tf_steps.rotation);
-            newRenderer = newStep.GetComponent<Renderer>();
-            objRenDict.Add(newStep.gameObject, newRenderer);
-
-            newStep = SimplePool.Spawn(step, tf_steps_2.position + new Vector3(0, 0.05f + 0.1f * i, 0.15f + 0.3f * i), tf_steps.rotation);
-            newRenderer = newStep.GetComponent<Renderer>();
-            objRenDict.Add(newStep.gameObject, newRenderer);
+            for (int j = 0; j < numOfStepInSlices[i]; j++)
+            {
+                newStep = SimplePool.Spawn(step, stepHolders[i].position + new Vector3(0, 0.05f + 0.1f * j, 0.15f + 0.3f * j), stepHolders[i].rotation);
+                newRenderer = newStep.GetComponent<Renderer>();
+                objRenDict.Add(newStep.gameObject, newRenderer);
+            }
         }
     }
 
@@ -135,29 +119,24 @@ public class PoolController : MonoBehaviour
         SimplePool.Spawn(brick, poolTf.position + new Vector3(j * 0.3f, 0, i * 0.4f), poolTf.rotation);
     }
 
-    private void LoadBrick(int[,] map, Transform poolTf, Brick brick)
+    public void LoadABrickInMap(int stageIndex, Brick brick)
     {
         SimplePool.CollectAPool(brick);
-        for (int i = map2D.GetLength(0) - 1; i >= 0; i--)
+        for (int i = mapStagesMatrix[stageIndex].GetLength(0) - 1; i >= 0; i--)
         {
-            for (int j = 0; j < map.GetLength(1); j++)
+            for (int j = 0; j < mapStagesMatrix[stageIndex].GetLength(1); j++)
             {
-                if (map2D[i, j] == brickIndex)
+                if (mapStagesMatrix[stageIndex][i, j] == currentBrickIndex)
                 {
-                    StartCoroutine(spawnDelay(poolTf, brick, i, j));
+                    StartCoroutine(spawnDelay(mapStartPoints[stageIndex], brick, i, j));
 
                 }
             }
         }
-        brickIndex++;
-        if (brickIndex == 4) {
-            brickIndex = 0;
+        currentBrickIndex++;
+        if (currentBrickIndex == 4) {
+            currentBrickIndex = 0;
         }
-    }
-
-    public void LoadStageOne(Brick brick)
-    {
-        LoadBrick(newMap2D, newPoolTransform, brick);
     }
 
     public Renderer GetMaterial(GameObject obj)

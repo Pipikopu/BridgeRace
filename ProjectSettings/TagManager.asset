@@ -21,6 +21,7 @@ TagManager:
   - PlayerGreenBrick
   - PlayerYellowBrick
   - Ground
+  - NormalBrick
   layers:
   - Default
   - TransparentFX
