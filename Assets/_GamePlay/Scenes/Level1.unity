@@ -688,89 +688,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7462616297157529437, guid: 6c261e84c61624ba19a0edeb4d17e9e3, type: 3}
   m_PrefabInstance: {fileID: 2033938828}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &444179676
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 444179677}
-  - component: {fileID: 444179679}
-  - component: {fileID: 444179678}
-  m_Layer: 6
-  m_Name: NewCamera
-  m_TagString: MainCamera
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &444179677
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 444179676}
-  m_LocalRotation: {x: 0.38268343, y: 0.000000014901161, z: -0, w: 0.92387956}
-  m_LocalPosition: {x: 0.019615114, y: 1.8, z: -1.1660254}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1343751577}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
---- !u!81 &444179678
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 444179676}
-  m_Enabled: 1
---- !u!20 &444179679
-Camera:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 444179676}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.37824848, g: 0.870837, b: 0.9433962, a: 0}
-  m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
-  m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 50
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
-  orthographic: 0
-  orthographic size: 5
-  m_Depth: -1
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
 --- !u!1 &502423246
 GameObject:
   m_ObjectHideFlags: 0
@@ -2101,9 +2018,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1334455343}
   - component: {fileID: 1334455342}
-  - component: {fileID: 1334455344}
   - component: {fileID: 1334455345}
   - component: {fileID: 1334455346}
+  - component: {fileID: 1334455344}
   m_Layer: 0
   m_Name: Player
   m_TagString: PlayerBlueBrick
@@ -2161,17 +2078,17 @@ MonoBehaviour:
   rotateSpeed: 360
   brick: {fileID: 7758709438505746696, guid: 668a4c7cc6ec847fcb3ea6d5f8e71747, type: 3}
   brickTag: 0
+  normalBrick: {fileID: -2705875483166380619, guid: 04fd3d4a1f3a74f68929959232fcaf3e, type: 3}
   stackPrefab: {fileID: 6959204298270309415, guid: 99b71edcca3a14e499852fde25eb6a71, type: 3}
   stackHolder: {fileID: 578843569}
-  stepTag: BlueStep
+  stepTag: 0
   stepMaterial: {fileID: 2100000, guid: d86cedf1143f8f44a9727384308720e1, type: 2}
   poolController: {fileID: 606677544}
   thisPlayer: {fileID: 1334455344}
   otherEnemies:
   - {fileID: 1343751578}
-  playerAnimator: {fileID: 1436797512}
   winTransform: {fileID: 1570303873}
-  normalBrick: {fileID: -2705875483166380619, guid: 04fd3d4a1f3a74f68929959232fcaf3e, type: 3}
+  playerAnimator: {fileID: 1436797512}
 --- !u!54 &1334455345
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2245,8 +2162,8 @@ GameObject:
   - component: {fileID: 1343751575}
   - component: {fileID: 1343751574}
   - component: {fileID: 1343751579}
-  - component: {fileID: 1343751578}
   - component: {fileID: 1343751580}
+  - component: {fileID: 1343751578}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: PlayerRedBrick
@@ -2308,7 +2225,6 @@ Transform:
   m_LocalPosition: {x: -0.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 444179677}
   - {fileID: 2093465188}
   m_Father: {fileID: 0}
   m_RootOrder: 11
@@ -2327,31 +2243,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyTransform: {fileID: 1343751577}
   modelTransform: {fileID: 2093465188}
+  enemyRb: {fileID: 1343751575}
+  agent: {fileID: 1343751579}
+  agentObstacle: {fileID: 1343751580}
   stageTransform:
   - {fileID: 305048068}
   moveSpeed: 50
   rotateSpeed: 360
-  playerRb: {fileID: 1343751575}
-  agent: {fileID: 1343751579}
   brick: {fileID: -7902865578945330868, guid: eaa5ac98844204b74935f6150b95033b, type: 3}
   brickTag: 1
+  normalBrick: {fileID: -2705875483166380619, guid: 04fd3d4a1f3a74f68929959232fcaf3e, type: 3}
   stackPrefab: {fileID: 6677309283648049745, guid: 539d3d0bf5dc049858b3d2d539cec1d2, type: 3}
   stackHolder: {fileID: 1284237812}
   stackMaterial: {fileID: 2100000, guid: 7bbf9d1c383eb9541af2c97e8c7260f9, type: 2}
   numOfStacksToBuild: 5
-  playerAnimator: {fileID: 1437448446}
-  stepTag: RedStep
+  stepTag: 1
   stepMaterial: {fileID: 2100000, guid: 7bbf9d1c383eb9541af2c97e8c7260f9, type: 2}
   poolController: {fileID: 606677544}
-  winTransform: {fileID: 1570303873}
-  player: {fileID: 1334455344}
   thisEnemy: {fileID: 1343751578}
+  player: {fileID: 1334455344}
   otherEnemies: []
-  agentObstacle: {fileID: 1343751580}
-  normalBrick: {fileID: -2705875483166380619, guid: 04fd3d4a1f3a74f68929959232fcaf3e, type: 3}
   cameraMain: {fileID: 963194227}
   cameraWinTransform: {fileID: 423550999}
   cameraSpeed: 10
+  winTransform: {fileID: 1570303873}
+  playerAnimator: {fileID: 1437448446}
 --- !u!195 &1343751579
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3358,5 +3274,5 @@ Transform:
   - {fileID: 1284237812}
   - {fileID: 1437448445}
   m_Father: {fileID: 1343751577}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

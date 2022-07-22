@@ -5,9 +5,17 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
+    // Enemy variables
     public Transform enemyTransform;
     public Transform modelTransform;
+    public Rigidbody enemyRb;
 
+    // Variables for moving by NavMesh
+    public NavMeshAgent agent;
+    public NavMeshObstacle agentObstacle;
+
+    private int cornerIndex;
+    private int cornerLength;
     private Vector3 targetPosition;
     private Vector3 cornerPosition;
 
@@ -19,13 +27,11 @@ public class Enemy : MonoBehaviour
     public float rotateSpeed;
     private float angleToRotate;
 
-    public Rigidbody playerRb;
 
-    public NavMeshAgent agent;
-
+    // Brick variables
     public Brick brick;
-    public enum brickTags { BlueBrick, RedBrick, GreenBrick, YellowBrick };
-    public brickTags brickTag;
+    public Constant.BrickTags brickTag;
+    public Brick normalBrick;
 
     // Stack variables
     public Stack stackPrefab;
@@ -34,51 +40,48 @@ public class Enemy : MonoBehaviour
     public Material stackMaterial;
     public int numOfStacksToBuild;
 
-    private int cornerIndex;
-    private int cornerLength;
-    public Animator playerAnimator;
-
     // Layer mask for step raycast
     private int layer_mask;
 
     // Step variables
-    public string stepTag;
+    public Constant.StepTags stepTag;
     public Material stepMaterial;
 
+    // Pool controller
     public PoolController poolController;
 
-    private bool isUpgrade;
-    private int currentStage;
-    private bool isWin;
-    public Transform winTransform;
-
-    private bool isFall;
-
-    public Player player;
+    // Enemy and other playables
     public Enemy thisEnemy;
+    public Player player;
     public List<Enemy> otherEnemies = new List<Enemy>();
 
-    public NavMeshObstacle agentObstacle;
-
-    public Brick normalBrick;
-
-    private bool isOnBridge;
-
+    // Camera variables
     public Camera cameraMain;
     public Transform cameraWinTransform;
     public float cameraSpeed;
 
+    // Other variables
+    private bool isFall;
+    private bool isOnBridge;
+    private bool isUpgrade;
+    private int currentStage;
+    private bool isWin;
+    public Transform winTransform;
+    public Animator playerAnimator;
+
     private void Start()
     {
-        cornerIndex = 0;
         isWin = false;
         isUpgrade = false;
-        targetPosition = enemyTransform.position + new Vector3(1, 0, 1);
-        numOfStacks = 0;
-        currentStage = 0;
         isFall = false;
         isOnBridge = false;
+
+        cornerIndex = 0;
+        numOfStacks = 0;
+        currentStage = 0;
         movement = Vector3.zero;
+
+        targetPosition = enemyTransform.position + new Vector3(1, 0, 1);
         agent.SetDestination(targetPosition);
         layer_mask = LayerMask.GetMask(Constant.MASK_STEP);
         agentObstacle.enabled = false;
@@ -88,11 +91,7 @@ public class Enemy : MonoBehaviour
     {
         if (isWin)
         {
-            cameraMain.transform.position = Vector3.MoveTowards(cameraMain.transform.position, cameraWinTransform.position, cameraSpeed * Time.deltaTime);
-            if (Vector3.Distance(cameraMain.transform.position, cameraWinTransform.position) < 0.1f)
-            {
-                StartCoroutine(openEndGameMenu());
-            }
+            MoveCamera();
             return;
         }
 
@@ -100,83 +99,203 @@ public class Enemy : MonoBehaviour
         {
             return;
         }
+
         if (agent.hasPath)
         {
             cornerLength = agent.path.corners.Length;
             if (cornerIndex < cornerLength)
             {
-                cornerPosition = agent.path.corners[cornerIndex];
-                if (Vector3.Distance(enemyTransform.position, cornerPosition) < 0.1f)
-                {
-                    cornerIndex++;
-                    movement = Vector3.zero;
-                }
-                else
-                {
-                    movement = (cornerPosition - enemyTransform.position).normalized;
-                    if (!CanGo())
-                    {
-                        if (movement.z > 0)
-                        {
-                            movement.z = 0;
-                        }
-
-                        cornerIndex = 0;
-                        targetPosition = SimplePool.GetFirstAcObjPos(brick, enemyTransform.position);
-                        agent.SetDestination(targetPosition);
-                        return;
-                    }
-                    angleToRotate = Mathf.Rad2Deg * Mathf.Atan2(movement.x, movement.z);
-                    modelTransform.rotation = Quaternion.RotateTowards(modelTransform.rotation, Quaternion.AngleAxis(angleToRotate, Vector3.up), rotateSpeed * Time.deltaTime);
-                    playerAnimator.SetBool(Constant.ANIM_IS_RUN, true);
-                }
+                MoveToNextCorner();
             }
             else if (cornerIndex == cornerLength)
             {
-                cornerPosition = targetPosition;
-                if (Vector3.Distance(enemyTransform.position, cornerPosition) < 0.1f)
-                {
-                    cornerIndex++;
-                    movement = Vector3.zero;
-                }
-                else
-                {
-                    movement = (cornerPosition - enemyTransform.position).normalized;
-                    if (!CanGo())
-                    {
-                        if (movement.z > 0)
-                        {
-                            movement.z = 0;
-                        }
-
-                        cornerIndex = 0;
-                        targetPosition = SimplePool.GetFirstAcObjPos(brick, enemyTransform.position);
-                        agent.SetDestination(targetPosition);
-                        return;
-                    }
-                    angleToRotate = Mathf.Rad2Deg * Mathf.Atan2(movement.x, movement.z);
-                    modelTransform.rotation = Quaternion.RotateTowards(modelTransform.rotation, Quaternion.AngleAxis(angleToRotate, Vector3.up), rotateSpeed * Time.deltaTime);
-                    playerAnimator.SetBool(Constant.ANIM_IS_RUN, true);
-                }
+                MoveToTarget();
             }
             else
             {
-                cornerIndex = 0;
-                if (numOfStacks >= numOfStacksToBuild && !isUpgrade)
+                ChangeTarget();
+            }
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (!isFall)
+        {
+            MoveCharacter(movement);
+        }
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        // Is fall
+        if (isFall)
+        {
+            return;
+        }
+        // Hit edible bricks
+        if (collider.CompareTag(brickTag.ToString()) || collider.CompareTag(Constant.NORMAL_BRICK_TAG))
+        {
+            Stack(collider.gameObject);
+        }
+        // it other playables
+        else if (collider.tag.Contains(Constant.PLAYER_STRING))
+        {
+            // Is on bridge, no interraction
+            if (isOnBridge)
+            {
+                return;
+            }
+            // Hit player
+            if (collider.CompareTag(player.gameObject.tag))
+            {
+                CollideWithPlayer();
+                return;
+            }
+            // Hit other enemies
+            else
+            {
+                CollideWithOthers(collider);
+            }
+        }
+        // Other triggers
+        else
+        {
+            switch (collider.tag)
+            {
+                // Go to new stage
+                case Constant.NEW_STAGE_TAG:
+                    currentStage++;
+                    collider.tag = Constant.UNTAGGED_TAG;
+                    poolController.LoadABrickInMap(currentStage, brick);
+                    isUpgrade = true;
+                    break;
+                // Hit finish point
+                case Constant.FINISH_TAG:
+                    collider.tag = Constant.UNTAGGED_TAG;
+                    Win();
+                    break;
+                // Is on bridge
+                case Constant.BRIDGE_TAG:
+                    isOnBridge = true;
+                    break;
+                // Is on ground
+                case Constant.GROUND_TAG:
+                    isOnBridge = false;
+                    break;
+            }
+        }
+    }
+
+    private void CollideWithOthers(Collider collider)
+    {
+        foreach (Enemy otherEnemy in otherEnemies)
+        {
+            if (collider.CompareTag(otherEnemy.gameObject.tag))
+            {
+                if (thisEnemy.GetNumOfStacks() < otherEnemy.GetNumOfStacks())
                 {
-                    targetPosition = stageTransform[currentStage].position;
-                    agent.SetDestination(targetPosition);
-                }
-                else
-                {
-                    if (isUpgrade)
-                    {
-                        isUpgrade = false;
-                    }
-                    targetPosition = SimplePool.GetFirstAcObjPos(brick, enemyTransform.position);
-                    agent.SetDestination(targetPosition);
+                    Fall();
+                    return;
                 }
             }
+        }
+        agent.SetDestination(targetPosition);
+    }
+
+    private void CollideWithPlayer()
+    {
+        if (thisEnemy.GetNumOfStacks() < player.GetNumOfStacks())
+        {
+            Fall();
+        }
+    }
+
+    void MoveCharacter(Vector3 direction)
+    {
+        enemyRb.velocity = direction * moveSpeed * Time.deltaTime;
+    }
+
+    private void ChangeTarget()
+    {
+        cornerIndex = 0;
+        if (numOfStacks >= numOfStacksToBuild && !isUpgrade)
+        {
+            targetPosition = stageTransform[currentStage].position;
+            agent.SetDestination(targetPosition);
+        }
+        else
+        {
+            if (isUpgrade)
+            {
+                isUpgrade = false;
+            }
+            targetPosition = SimplePool.GetFirstAcObjPos(brick, enemyTransform.position);
+            agent.SetDestination(targetPosition);
+        }
+    }
+
+    private void MoveToTarget()
+    {
+        cornerPosition = targetPosition;
+        if (Vector3.Distance(enemyTransform.position, cornerPosition) < 0.1f)
+        {
+            cornerIndex++;
+            movement = Vector3.zero;
+        }
+        else
+        {
+            SetMovement();
+            SetRotation();
+            playerAnimator.SetBool(Constant.ANIM_IS_RUN, true);
+        }
+    }
+
+    private void MoveToNextCorner()
+    {
+        cornerPosition = agent.path.corners[cornerIndex];
+        if (Vector3.Distance(enemyTransform.position, cornerPosition) < 0.08f)
+        {
+            cornerIndex++;
+            movement = Vector3.zero;
+        }
+        else
+        {
+            SetMovement();
+            SetRotation();
+            playerAnimator.SetBool(Constant.ANIM_IS_RUN, true);
+        }
+    }
+
+    private void SetMovement()
+    {
+        movement = (cornerPosition - enemyTransform.position).normalized;
+        if (!CanGo())
+        {
+            if (movement.z > 0)
+            {
+                movement.z = 0;
+            }
+
+            cornerIndex = 0;
+            targetPosition = SimplePool.GetFirstAcObjPos(brick, enemyTransform.position);
+            agent.SetDestination(targetPosition);
+            return;
+        }
+    }
+
+    private void SetRotation()
+    {
+        angleToRotate = Mathf.Rad2Deg * Mathf.Atan2(movement.x, movement.z);
+        modelTransform.rotation = Quaternion.RotateTowards(modelTransform.rotation, Quaternion.AngleAxis(angleToRotate, Vector3.up), rotateSpeed * Time.deltaTime);
+    }
+
+    private void MoveCamera()
+    {
+        cameraMain.transform.position = Vector3.MoveTowards(cameraMain.transform.position, cameraWinTransform.position, cameraSpeed * Time.deltaTime);
+        if (Vector3.Distance(cameraMain.transform.position, cameraWinTransform.position) < 0.1f)
+        {
+            StartCoroutine(openEndGameMenu());
         }
     }
 
@@ -184,7 +303,7 @@ public class Enemy : MonoBehaviour
     {
         if (Physics.Raycast(enemyTransform.position + Vector3.up * 0.05f, Vector3.forward, out RaycastHit hit, 0.1f, layer_mask))
         {
-            if (hit.collider.tag == stepTag)
+            if (hit.collider.tag == stepTag.ToString())
             {
                 return true;
             }
@@ -208,88 +327,12 @@ public class Enemy : MonoBehaviour
         render.material = stepMaterial;
         render.enabled = true;
 
-        colliderObj.tag = stepTag;
+        colliderObj.tag = stepTag.ToString();
 
         SimplePool.DespawnNewest(stackPrefab);
         SimplePool.SpawnOldest(brick);
 
         numOfStacks--;
-    }
-
-    private void FixedUpdate()
-    {
-        if (!isFall)
-        {
-            MoveCharacter(movement);
-        }
-    }
-
-    void MoveCharacter(Vector3 direction)
-    {
-        playerRb.velocity = direction * moveSpeed * Time.deltaTime;
-    }
-
-    private void OnTriggerEnter(Collider collider)
-    {
-        if (isFall)
-        {
-            return;
-        }
-        if (collider.CompareTag(brickTag.ToString()) || collider.CompareTag("NormalBrick"))
-        {
-            Stack(collider.gameObject);
-        }
-        else if (collider.tag.Contains("Player"))
-        {
-            if (isOnBridge)
-            {
-                return;
-            }
-            if (collider.CompareTag(player.gameObject.tag))
-            {
-                if (thisEnemy.GetNumOfStacks() < player.GetNumOfStacks())
-                {
-                    Fall();
-                    return;
-                }
-            }
-
-            foreach (Enemy otherEnemy in otherEnemies)
-            {
-                if (collider.CompareTag(otherEnemy.gameObject.tag))
-                {
-                    if (thisEnemy.GetNumOfStacks() < otherEnemy.GetNumOfStacks())
-                    {
-                        Fall();
-                        return;
-                    }
-                }
-            }
-
-            agent.SetDestination(targetPosition);
-        }
-        else
-        {
-            switch (collider.tag)
-            {
-                case Constant.NEW_STAGE_TAG:
-                    currentStage++;
-                    collider.tag = Constant.UNTAGGED_TAG;
-                    poolController.LoadABrickInMap(currentStage, brick);
-                    isUpgrade = true;
-                    break;
-                case Constant.FINISH_TAG:
-                    collider.tag = Constant.UNTAGGED_TAG;
-                    Win();
-                    break;
-                case "Bridge":
-                    isOnBridge = true;
-                    break;
-                case "Ground":
-                    isOnBridge = false;
-                    break;
-            }
-        }
     }
 
     private void Win()

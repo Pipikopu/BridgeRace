@@ -1766,8 +1766,8 @@ GameObject:
   - component: {fileID: 967729706}
   - component: {fileID: 967729705}
   - component: {fileID: 967729704}
-  - component: {fileID: 967729703}
   - component: {fileID: 967729709}
+  - component: {fileID: 967729703}
   m_Layer: 6
   m_Name: Enemy (1)
   m_TagString: PlayerGreenBrick
@@ -1789,33 +1789,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyTransform: {fileID: 967729708}
   modelTransform: {fileID: 1235329325}
+  enemyRb: {fileID: 967729706}
+  agent: {fileID: 967729704}
+  agentObstacle: {fileID: 967729709}
   stageTransform:
   - {fileID: 617215537}
   - {fileID: 169630129}
   moveSpeed: 50
   rotateSpeed: 360
-  playerRb: {fileID: 967729706}
-  agent: {fileID: 967729704}
   brick: {fileID: -2705875483166380619, guid: f54debf743eb44f9591f8bdeb141dac9, type: 3}
   brickTag: 2
+  normalBrick: {fileID: -2705875483166380619, guid: 04fd3d4a1f3a74f68929959232fcaf3e, type: 3}
   stackPrefab: {fileID: 451029281343515949, guid: cfed9b633a38b48a0a0901657dedae74, type: 3}
   stackHolder: {fileID: 1155384360}
   stackMaterial: {fileID: 2100000, guid: f4901e013bbc3354c9a366c9a0e84ba0, type: 2}
   numOfStacksToBuild: 5
-  playerAnimator: {fileID: 1825773038}
-  stepTag: GreenStep
+  stepTag: 2
   stepMaterial: {fileID: 2100000, guid: f4901e013bbc3354c9a366c9a0e84ba0, type: 2}
   poolController: {fileID: 606677544}
-  winTransform: {fileID: 1337881823}
-  player: {fileID: 1334455344}
   thisEnemy: {fileID: 967729703}
+  player: {fileID: 1334455344}
   otherEnemies:
   - {fileID: 1343751578}
-  agentObstacle: {fileID: 967729709}
-  normalBrick: {fileID: -2705875483166380619, guid: 04fd3d4a1f3a74f68929959232fcaf3e, type: 3}
   cameraMain: {fileID: 963194227}
   cameraWinTransform: {fileID: 2047997324}
   cameraSpeed: 10
+  winTransform: {fileID: 1337881823}
+  playerAnimator: {fileID: 1825773038}
 --- !u!195 &967729704
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2188,9 +2188,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1334455343}
   - component: {fileID: 1334455342}
-  - component: {fileID: 1334455344}
   - component: {fileID: 1334455345}
   - component: {fileID: 1334455346}
+  - component: {fileID: 1334455344}
   m_Layer: 0
   m_Name: Player
   m_TagString: PlayerBlueBrick
@@ -2248,18 +2248,18 @@ MonoBehaviour:
   rotateSpeed: 360
   brick: {fileID: 7758709438505746696, guid: 668a4c7cc6ec847fcb3ea6d5f8e71747, type: 3}
   brickTag: 0
+  normalBrick: {fileID: -2705875483166380619, guid: 04fd3d4a1f3a74f68929959232fcaf3e, type: 3}
   stackPrefab: {fileID: 6959204298270309415, guid: 99b71edcca3a14e499852fde25eb6a71, type: 3}
   stackHolder: {fileID: 578843569}
-  stepTag: BlueStep
+  stepTag: 0
   stepMaterial: {fileID: 2100000, guid: d86cedf1143f8f44a9727384308720e1, type: 2}
   poolController: {fileID: 606677544}
   thisPlayer: {fileID: 1334455344}
   otherEnemies:
   - {fileID: 1343751578}
   - {fileID: 967729703}
-  playerAnimator: {fileID: 1436797512}
   winTransform: {fileID: 1337881823}
-  normalBrick: {fileID: -2705875483166380619, guid: 04fd3d4a1f3a74f68929959232fcaf3e, type: 3}
+  playerAnimator: {fileID: 1436797512}
 --- !u!54 &1334455345
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2338,8 +2338,8 @@ GameObject:
   - component: {fileID: 1343751575}
   - component: {fileID: 1343751574}
   - component: {fileID: 1343751579}
-  - component: {fileID: 1343751578}
   - component: {fileID: 1343751580}
+  - component: {fileID: 1343751578}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: PlayerRedBrick
@@ -2420,33 +2420,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyTransform: {fileID: 1343751577}
   modelTransform: {fileID: 2093465188}
+  enemyRb: {fileID: 1343751575}
+  agent: {fileID: 1343751579}
+  agentObstacle: {fileID: 1343751580}
   stageTransform:
   - {fileID: 1101581295}
   - {fileID: 169630129}
   moveSpeed: 50
   rotateSpeed: 360
-  playerRb: {fileID: 1343751575}
-  agent: {fileID: 1343751579}
   brick: {fileID: -7902865578945330868, guid: eaa5ac98844204b74935f6150b95033b, type: 3}
   brickTag: 1
+  normalBrick: {fileID: -2705875483166380619, guid: 04fd3d4a1f3a74f68929959232fcaf3e, type: 3}
   stackPrefab: {fileID: 6677309283648049745, guid: 539d3d0bf5dc049858b3d2d539cec1d2, type: 3}
   stackHolder: {fileID: 1284237812}
   stackMaterial: {fileID: 2100000, guid: 7bbf9d1c383eb9541af2c97e8c7260f9, type: 2}
   numOfStacksToBuild: 5
-  playerAnimator: {fileID: 1437448446}
-  stepTag: RedStep
+  stepTag: 1
   stepMaterial: {fileID: 2100000, guid: 7bbf9d1c383eb9541af2c97e8c7260f9, type: 2}
   poolController: {fileID: 606677544}
-  winTransform: {fileID: 1337881823}
-  player: {fileID: 1334455344}
   thisEnemy: {fileID: 1343751578}
+  player: {fileID: 1334455344}
   otherEnemies:
   - {fileID: 967729703}
-  agentObstacle: {fileID: 1343751580}
-  normalBrick: {fileID: -2705875483166380619, guid: 04fd3d4a1f3a74f68929959232fcaf3e, type: 3}
   cameraMain: {fileID: 963194227}
   cameraWinTransform: {fileID: 2047997324}
   cameraSpeed: 10
+  winTransform: {fileID: 1337881823}
+  playerAnimator: {fileID: 1437448446}
 --- !u!195 &1343751579
 NavMeshAgent:
   m_ObjectHideFlags: 0

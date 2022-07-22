@@ -10,22 +10,4 @@ public class Stack : GameUnit
     {
         stackRenderer.material = material;
     }
-    //public Rigidbody rgbody;
-
-    //private void Start()
-    //{
-    //    onGround();
-    //}
-
-    //public void onFall()
-    //{
-    //    rgbody.useGravity = true;
-    //    rgbody.isKinematic = false;
-    //}
-
-    //public void onGround()
-    //{
-    //    rgbody.useGravity = false;
-    //    rgbody.isKinematic = true;
-    //}
 }

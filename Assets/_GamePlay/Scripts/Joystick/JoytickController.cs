@@ -51,7 +51,7 @@ public class JoytickController : MonoBehaviour, IDragHandler, IPointerDownHandle
         }
         else
         {
-            return Input.GetAxis("Horizontal");
+            return Input.GetAxis(Constant.HORIZONTAL_AXIS);
         }
     }
 
@@ -61,6 +61,6 @@ public class JoytickController : MonoBehaviour, IDragHandler, IPointerDownHandle
         {
             return posInput.y;
         }
-        else return Input.GetAxis("Vertical");
+        else return Input.GetAxis(Constant.VERTICAL_AXIS);
     }
 }

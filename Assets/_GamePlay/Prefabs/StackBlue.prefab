@@ -109,7 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e3e2938b46d2470abcbe6ec2620814a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stackRigid: {fileID: 5545160370002323978}
+  stackRenderer: {fileID: 217539054504000270}
 --- !u!54 &5545160370002323978
 Rigidbody:
   m_ObjectHideFlags: 0

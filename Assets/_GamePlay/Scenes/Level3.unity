@@ -595,7 +595,7 @@ GameObject:
   - component: {fileID: 321481663}
   m_Layer: 6
   m_Name: Enemy (2)
-  m_TagString: PlayerGreenBrick
+  m_TagString: PlayerYellowBrick
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -630,35 +630,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyTransform: {fileID: 321481669}
   modelTransform: {fileID: 1221319304}
+  enemyRb: {fileID: 321481667}
+  agent: {fileID: 321481665}
+  agentObstacle: {fileID: 321481663}
   stageTransform:
   - {fileID: 724767951}
   - {fileID: 1959877072}
   - {fileID: 603805104}
   moveSpeed: 50
   rotateSpeed: 360
-  playerRb: {fileID: 321481667}
-  agent: {fileID: 321481665}
   brick: {fileID: 5670442059534513786, guid: b9605433d4cf942c19cd3f7f630ed41e, type: 3}
   brickTag: 3
+  normalBrick: {fileID: -2705875483166380619, guid: 04fd3d4a1f3a74f68929959232fcaf3e, type: 3}
   stackPrefab: {fileID: 5383218334911983102, guid: 285000a4514644b92aae1619d22b0f48, type: 3}
   stackHolder: {fileID: 7545941}
   stackMaterial: {fileID: 2100000, guid: 5d57cd667598faf4789fb03c8102aecd, type: 2}
   numOfStacksToBuild: 5
-  playerAnimator: {fileID: 152737892}
-  stepTag: YellowStep
+  stepTag: 3
   stepMaterial: {fileID: 2100000, guid: 5d57cd667598faf4789fb03c8102aecd, type: 2}
   poolController: {fileID: 606677544}
-  winTransform: {fileID: 728530759}
-  player: {fileID: 1334455344}
   thisEnemy: {fileID: 321481664}
+  player: {fileID: 1334455344}
   otherEnemies:
   - {fileID: 1343751578}
   - {fileID: 967729703}
-  agentObstacle: {fileID: 321481663}
-  normalBrick: {fileID: -2705875483166380619, guid: 04fd3d4a1f3a74f68929959232fcaf3e, type: 3}
   cameraMain: {fileID: 963194227}
   cameraWinTransform: {fileID: 1466871599}
   cameraSpeed: 10
+  winTransform: {fileID: 728530759}
+  playerAnimator: {fileID: 152737892}
 --- !u!195 &321481665
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1899,35 +1899,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyTransform: {fileID: 967729708}
   modelTransform: {fileID: 1235329325}
+  enemyRb: {fileID: 967729706}
+  agent: {fileID: 967729704}
+  agentObstacle: {fileID: 967729709}
   stageTransform:
   - {fileID: 81224481}
   - {fileID: 1959877072}
   - {fileID: 603805104}
   moveSpeed: 50
   rotateSpeed: 360
-  playerRb: {fileID: 967729706}
-  agent: {fileID: 967729704}
   brick: {fileID: -2705875483166380619, guid: f54debf743eb44f9591f8bdeb141dac9, type: 3}
   brickTag: 2
+  normalBrick: {fileID: -2705875483166380619, guid: 04fd3d4a1f3a74f68929959232fcaf3e, type: 3}
   stackPrefab: {fileID: 451029281343515949, guid: cfed9b633a38b48a0a0901657dedae74, type: 3}
   stackHolder: {fileID: 1155384360}
   stackMaterial: {fileID: 2100000, guid: f4901e013bbc3354c9a366c9a0e84ba0, type: 2}
   numOfStacksToBuild: 5
-  playerAnimator: {fileID: 1825773038}
-  stepTag: GreenStep
+  stepTag: 2
   stepMaterial: {fileID: 2100000, guid: f4901e013bbc3354c9a366c9a0e84ba0, type: 2}
   poolController: {fileID: 606677544}
-  winTransform: {fileID: 728530759}
-  player: {fileID: 1334455344}
   thisEnemy: {fileID: 967729703}
+  player: {fileID: 1334455344}
   otherEnemies:
   - {fileID: 1343751578}
   - {fileID: 321481664}
-  agentObstacle: {fileID: 967729709}
-  normalBrick: {fileID: -2705875483166380619, guid: 04fd3d4a1f3a74f68929959232fcaf3e, type: 3}
   cameraMain: {fileID: 963194227}
   cameraWinTransform: {fileID: 1466871599}
   cameraSpeed: 10
+  winTransform: {fileID: 728530759}
+  playerAnimator: {fileID: 1825773038}
 --- !u!195 &967729704
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2348,9 +2348,10 @@ MonoBehaviour:
   rotateSpeed: 360
   brick: {fileID: 7758709438505746696, guid: 668a4c7cc6ec847fcb3ea6d5f8e71747, type: 3}
   brickTag: 0
+  normalBrick: {fileID: -2705875483166380619, guid: 04fd3d4a1f3a74f68929959232fcaf3e, type: 3}
   stackPrefab: {fileID: 6959204298270309415, guid: 99b71edcca3a14e499852fde25eb6a71, type: 3}
   stackHolder: {fileID: 578843569}
-  stepTag: BlueStep
+  stepTag: 0
   stepMaterial: {fileID: 2100000, guid: d86cedf1143f8f44a9727384308720e1, type: 2}
   poolController: {fileID: 606677544}
   thisPlayer: {fileID: 1334455344}
@@ -2358,9 +2359,8 @@ MonoBehaviour:
   - {fileID: 1343751578}
   - {fileID: 967729703}
   - {fileID: 321481664}
-  playerAnimator: {fileID: 1436797512}
   winTransform: {fileID: 728530759}
-  normalBrick: {fileID: -2705875483166380619, guid: 04fd3d4a1f3a74f68929959232fcaf3e, type: 3}
+  playerAnimator: {fileID: 1436797512}
 --- !u!54 &1334455345
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2516,35 +2516,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyTransform: {fileID: 1343751577}
   modelTransform: {fileID: 2093465188}
+  enemyRb: {fileID: 1343751575}
+  agent: {fileID: 1343751579}
+  agentObstacle: {fileID: 1343751580}
   stageTransform:
   - {fileID: 2016014833}
   - {fileID: 970477400}
   - {fileID: 603805104}
   moveSpeed: 50
   rotateSpeed: 360
-  playerRb: {fileID: 1343751575}
-  agent: {fileID: 1343751579}
   brick: {fileID: -7902865578945330868, guid: eaa5ac98844204b74935f6150b95033b, type: 3}
   brickTag: 1
+  normalBrick: {fileID: -2705875483166380619, guid: 04fd3d4a1f3a74f68929959232fcaf3e, type: 3}
   stackPrefab: {fileID: 6677309283648049745, guid: 539d3d0bf5dc049858b3d2d539cec1d2, type: 3}
   stackHolder: {fileID: 1284237812}
   stackMaterial: {fileID: 2100000, guid: 7bbf9d1c383eb9541af2c97e8c7260f9, type: 2}
   numOfStacksToBuild: 5
-  playerAnimator: {fileID: 1437448446}
-  stepTag: RedStep
+  stepTag: 1
   stepMaterial: {fileID: 2100000, guid: 7bbf9d1c383eb9541af2c97e8c7260f9, type: 2}
   poolController: {fileID: 606677544}
-  winTransform: {fileID: 728530759}
-  player: {fileID: 1334455344}
   thisEnemy: {fileID: 1343751578}
+  player: {fileID: 1334455344}
   otherEnemies:
   - {fileID: 967729703}
   - {fileID: 321481664}
-  agentObstacle: {fileID: 1343751580}
-  normalBrick: {fileID: -2705875483166380619, guid: 04fd3d4a1f3a74f68929959232fcaf3e, type: 3}
   cameraMain: {fileID: 963194227}
   cameraWinTransform: {fileID: 1466871599}
   cameraSpeed: 10
+  winTransform: {fileID: 728530759}
+  playerAnimator: {fileID: 1437448446}
 --- !u!195 &1343751579
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3909,7 +3909,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2010384773
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4466,6 +4466,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6687329341326942530, guid: e15b7a679f16e47caa51bea36659a58e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.34
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e15b7a679f16e47caa51bea36659a58e, type: 3}
 --- !u!1001 &6608956583107459630
@@ -4475,6 +4479,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2129948018119162695, guid: fd030ec9816fa45f2bf663dc60a4eb45, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 3088852955148245301, guid: fd030ec9816fa45f2bf663dc60a4eb45, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.34
+      objectReference: {fileID: 0}
     - target: {fileID: 6251369176794217947, guid: fd030ec9816fa45f2bf663dc60a4eb45, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -4568,6 +4580,14 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5107517221513326460, guid: 32ca0347f60854f8dbb75aa7f6e72668, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 5753404540148557430, guid: 32ca0347f60854f8dbb75aa7f6e72668, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.34
+      objectReference: {fileID: 0}
     - target: {fileID: 5880512632700707820, guid: 32ca0347f60854f8dbb75aa7f6e72668, type: 3}
       propertyPath: m_RootOrder
       value: 15
@@ -4611,6 +4631,10 @@ PrefabInstance:
     - target: {fileID: 5880512632700707820, guid: 32ca0347f60854f8dbb75aa7f6e72668, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8436829830294962008, guid: 32ca0347f60854f8dbb75aa7f6e72668, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.34
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 32ca0347f60854f8dbb75aa7f6e72668, type: 3}

@@ -24,7 +24,7 @@ public class LevelManager : MonoBehaviour
     public void BackToMenu()
     {
         int currentLevel = SceneManager.GetActiveScene().buildIndex;
-        PlayerPrefs.SetInt("CurrentLevel", currentLevel);
+        PlayerPrefs.SetInt(Constant.CURRENT_LEVEL_STRING, currentLevel);
         SimplePool.ReleaseAll();
         Time.timeScale = 1;
         SceneManager.LoadScene(0);
@@ -32,7 +32,7 @@ public class LevelManager : MonoBehaviour
 
     public void StartGame()
     {
-        int currentLevel = PlayerPrefs.GetInt("CurrentLevel");
+        int currentLevel = PlayerPrefs.GetInt(Constant.CURRENT_LEVEL_STRING);
         if (currentLevel == 0)
         {
             currentLevel = 1;
@@ -44,7 +44,7 @@ public class LevelManager : MonoBehaviour
 
     public void NewGame()
     {
-        PlayerPrefs.SetInt("CurrentLevel", 1);
+        PlayerPrefs.SetInt(Constant.CURRENT_LEVEL_STRING, 1);
         SimplePool.ReleaseAll();
         Time.timeScale = 1;
         SceneManager.LoadScene(1);

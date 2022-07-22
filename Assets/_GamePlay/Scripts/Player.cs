@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Player : MonoBehaviour
 {
@@ -23,39 +22,34 @@ public class Player : MonoBehaviour
 
     // Brick variables
     public Brick brick;
-    public enum brickTags { BlueBrick, RedBrick, GreenBrick, YellowBrick };
-    public brickTags brickTag;
+    public Constant.BrickTags brickTag;
+    public Brick normalBrick;
 
     // Stack variables
     public Stack stackPrefab;
     public Transform stackHolder;
     private int numOfStacks;
 
-    // Step variables
-    public string stepTag;
-    public Material stepMaterial;
-
     // Layer mask for step raycast
     private int layer_mask;
+    // Step variables
+    public Constant.StepTags stepTag;
+    public Material stepMaterial;
 
     // Pool controller
     public PoolController poolController;
 
-    // Player and Other Players
+    // Player and other playables
     public Player thisPlayer;
     public List<Enemy> otherEnemies = new List<Enemy>();
 
     // Other variables
     private bool isFall;
-    public Animator playerAnimator;
-    public Transform winTransform;
-    private bool isWin;
-
     private bool isOnBridge;
-
-    public Brick normalBrick;
-
+    private bool isWin;
     private int currentStage;
+    public Transform winTransform;
+    public Animator playerAnimator;
 
     void Start()
     {
@@ -64,13 +58,15 @@ public class Player : MonoBehaviour
 
     private void OnInit()
     {
-        currentStage = 0;
         inputX = 0;
         inputZ = 0;
+
         numOfStacks = 0;
+        currentStage = 0;
         isWin = false;
         isFall = false;
         isOnBridge = false;
+
         layer_mask = LayerMask.GetMask(Constant.MASK_STEP);
     }
 
@@ -81,10 +77,12 @@ public class Player : MonoBehaviour
             StartCoroutine(openEndGameMenu());
             return;
         }
-        if (!isFall)
+        else if (isFall)
         {
-            Move();
+            movement = Vector3.zero;
+            return;
         }
+        else Move();
     }
 
     private void Move()
@@ -94,24 +92,103 @@ public class Player : MonoBehaviour
 
         if (inputX == 0 && inputZ == 0)
         {
-            playerAnimator.SetBool(Constant.ANIM_IS_RUN, false);
-            movement = Vector3.zero;
+            Stop();
             return;
         }
-        playerAnimator.SetBool(Constant.ANIM_IS_RUN, true);
+        else
+        {
+            playerAnimator.SetBool(Constant.ANIM_IS_RUN, true);
+            SetRotation();
+            SetMovement();
+        }
+    }
 
+    private void FixedUpdate()
+    {
+        if (!isFall || !isWin)
+        {
+            MoveCharacter(movement);
+        }
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        // Is fall
+        if (isFall)
+        {
+            return;
+        }
+        // Hit edible bricks
+        if (collider.CompareTag(brickTag.ToString())|| collider.CompareTag(Constant.NORMAL_BRICK_TAG))
+        {
+            Stack(collider.gameObject);
+        }
+        // Hit other playables
+        else if (collider.tag.Contains(Constant.PLAYER_STRING))
+        {
+            if (isOnBridge)
+            {
+                return;
+            }
+            else
+            {
+                CollideWithOthers(collider);
+            }
+        }
+        // Other triggers
+        else
+        {
+            switch (collider.tag)
+            {
+                // Go to new stage
+                case Constant.NEW_STAGE_TAG:
+                    collider.tag = Constant.UNTAGGED_TAG;
+                    currentStage++;
+                    poolController.LoadABrickInMap(currentStage, brick);
+                    break;
+                // Hit finish point
+                case Constant.FINISH_TAG:
+                    collider.tag = Constant.UNTAGGED_TAG;
+                    Win();
+                    break;
+                // Is on bridge
+                case Constant.BRIDGE_TAG:
+                    isOnBridge = true;
+                    break;
+                // Is on ground
+                case Constant.GROUND_TAG:
+                    isOnBridge = false;
+                    break;
+            }
+        }
+    }
+
+    private void Stop()
+    {
+        playerAnimator.SetBool(Constant.ANIM_IS_RUN, false);
+        movement = Vector3.zero;
+    }
+
+    private void SetRotation()
+    {
         angleToRotate = Mathf.Rad2Deg * Mathf.Atan2(inputX, inputZ);
         modelTransform.rotation = Quaternion.RotateTowards(modelTransform.rotation, Quaternion.AngleAxis(angleToRotate, Vector3.up), rotateSpeed * Time.deltaTime);
+    }
 
+    private void SetMovement()
+    {
+        // Can not go up
         if (!CanGo() && inputZ > 0)
         {
             inputZ = 0;
         }
 
+        // Go down bridge
         if (isOnBridge && movement.z < 0)
         {
             movement = new Vector3(inputX, inputZ * 0.7f, inputZ);
         }
+        // Normal movement
         else
         {
             movement = new Vector3(inputX, 0, inputZ);
@@ -122,7 +199,7 @@ public class Player : MonoBehaviour
     {
         if (Physics.Raycast(playerTransform.position + Vector3.up * 0.05f, Vector3.forward, out RaycastHit hit, 0.1f, layer_mask))
         {
-            if (hit.collider.tag == stepTag)
+            if (hit.collider.tag == stepTag.ToString())
             {
                 return true;
             }
@@ -136,30 +213,17 @@ public class Player : MonoBehaviour
                 return true;
             }
         }
-
         return true;
-    }
-
-    private void FixedUpdate()
-    {
-        if (!isFall || !isWin)
-        {
-            MoveCharacter(movement);
-        }
-    }
-
-    void MoveCharacter(Vector3 direction)
-    {
-        playerRb.velocity = direction * moveSpeed * Time.deltaTime;
     }
 
     private void BuildStep(GameObject colliderObj)
     {
+        // Set renderer of step
         Renderer render = poolController.GetMaterial(colliderObj);
         render.material = stepMaterial;
         render.enabled = true;
 
-        colliderObj.tag = stepTag;
+        colliderObj.tag = stepTag.ToString();
 
         SimplePool.DespawnNewest(stackPrefab);
         SimplePool.SpawnOldest(brick);
@@ -167,53 +231,23 @@ public class Player : MonoBehaviour
         numOfStacks--;
     }
 
-    private void OnTriggerEnter(Collider collider)
+    void MoveCharacter(Vector3 direction)
     {
-        if (isFall)
+        playerRb.velocity = direction * moveSpeed * Time.deltaTime;
+    }
+
+    private void CollideWithOthers(Collider collider)
+    {
+        foreach (Enemy otherEnemy in otherEnemies)
         {
-            return;
-        }
-        if (collider.CompareTag(brickTag.ToString())|| collider.CompareTag("NormalBrick"))
-        {
-            Stack(collider.gameObject);
-        }
-        else if (collider.tag.Contains("Player"))
-        {
-            if (isOnBridge)
+            if (collider.CompareTag(otherEnemy.gameObject.tag))
             {
-                return;
-            }
-            foreach (Enemy otherEnemy in otherEnemies)
-            {
-                if (collider.CompareTag(otherEnemy.gameObject.tag))
+                // Compare num of stacks
+                if (thisPlayer.GetNumOfStacks() < otherEnemy.GetNumOfStacks())
                 {
-                    if (thisPlayer.GetNumOfStacks() < otherEnemy.GetNumOfStacks())
-                    {
-                        Fall();
-                        return;
-                    }
+                    Fall();
+                    return;
                 }
-            }
-        }
-        else
-        {
-            switch (collider.tag)
-            {
-                case Constant.NEW_STAGE_TAG:
-                    currentStage++;
-                    collider.tag = Constant.UNTAGGED_TAG;
-                    poolController.LoadABrickInMap(currentStage, brick);
-                    break;
-                case Constant.FINISH_TAG:
-                    collider.tag = Constant.UNTAGGED_TAG;
-                    Win();
-                    break;
-                case "Bridge":
-                    isOnBridge = true;
-                    break;
-                case "Ground":
-                    isOnBridge = false;
-                    break;
             }
         }
     }
@@ -231,8 +265,8 @@ public class Player : MonoBehaviour
 
     private void Win()
     {
-        movement = Vector3.zero;
         isWin = true;
+        movement = Vector3.zero;
 
         SimplePool.CollectAPool(stackPrefab);
         playerTransform.position = winTransform.position;
@@ -246,6 +280,7 @@ public class Player : MonoBehaviour
 
     IEnumerator NotFall()
     {
+        isFall = true;
         playerAnimator.SetBool(Constant.ANIM_IS_FALL, true);
         while (numOfStacks > 0)
         {
@@ -253,8 +288,9 @@ public class Player : MonoBehaviour
             SimplePool.Spawn(normalBrick, stack.gameObject.transform.position, stack.gameObject.transform.rotation);
             numOfStacks--;
         }
-        isFall = true;
+
         yield return new WaitForSeconds(1.5f);
+
         playerAnimator.SetBool(Constant.ANIM_IS_FALL, false);
         isFall = false;
     }
