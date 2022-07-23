@@ -5,6 +5,8 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
+    // TODO: Seperate Script Into Smaller Ones
+
     // Enemy variables
     public Transform enemyTransform;
     public Transform modelTransform;
@@ -303,7 +305,7 @@ public class Enemy : MonoBehaviour
     {
         if (Physics.Raycast(enemyTransform.position + Vector3.up * 0.05f, Vector3.forward, out RaycastHit hit, 0.1f, layer_mask))
         {
-            if (hit.collider.tag == stepTag.ToString())
+            if (hit.collider.tag.Equals(stepTag.ToString()))
             {
                 return true;
             }

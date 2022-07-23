@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    // TODO: Seperate Script Into Smaller Ones
+
     // Player variables
     public Transform playerTransform;
     public Transform modelTransform;
@@ -199,7 +201,7 @@ public class Player : MonoBehaviour
     {
         if (Physics.Raycast(playerTransform.position + Vector3.up * 0.05f, Vector3.forward, out RaycastHit hit, 0.1f, layer_mask))
         {
-            if (hit.collider.tag == stepTag.ToString())
+            if (hit.collider.tag.Equals(stepTag.ToString()))
             {
                 return true;
             }

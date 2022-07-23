@@ -26,7 +26,7 @@ public class Brick : GameUnit
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.tag == "Ground")
+        if (other.gameObject.tag.Equals(Constant.GROUND_TAG))
         {
             isOnGround = true;
         }
@@ -36,7 +36,7 @@ public class Brick : GameUnit
     {
         if (isOnGround)
         {
-            if (other.tag.Contains("Player") && allowAll)
+            if (other.tag.Contains(Constant.PLAYER_STRING) && allowAll)
             {
                 SimplePool.Despawn(this);
             }
