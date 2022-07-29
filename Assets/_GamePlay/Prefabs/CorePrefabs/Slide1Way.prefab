@@ -484,6 +484,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6256108961353503149}
     m_Modifications:
+    - target: {fileID: 357191541100765721, guid: dfbec45a49b5c485a91ec35f7f7916ed, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 728461012877731885, guid: dfbec45a49b5c485a91ec35f7f7916ed, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.34
+      objectReference: {fileID: 0}
+    - target: {fileID: 5158756316501374133, guid: dfbec45a49b5c485a91ec35f7f7916ed, type: 3}
+      propertyPath: m_Size.z
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 7481295989043941546, guid: dfbec45a49b5c485a91ec35f7f7916ed, type: 3}
       propertyPath: m_Name
       value: 10StepSlide

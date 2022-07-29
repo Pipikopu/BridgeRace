@@ -26,7 +26,7 @@ public class Brick : GameUnit
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.tag.Equals(Constant.GROUND_TAG))
+        if (other.gameObject.CompareTag(Constant.GROUND_TAG))
         {
             isOnGround = true;
         }

@@ -48,6 +48,7 @@ public class Enemy : MonoBehaviour
     // Step variables
     public Constant.StepTags stepTag;
     public Material stepMaterial;
+    public string stepMatName;
 
     // Pool controller
     public PoolController poolController;
@@ -71,12 +72,16 @@ public class Enemy : MonoBehaviour
     public Transform winTransform;
     public Animator playerAnimator;
 
+    public bool isHitNextStage;
+
     private void Start()
     {
+        isHitNextStage = false;
         isWin = false;
         isUpgrade = false;
         isFall = false;
         isOnBridge = false;
+        stepMatName = stepMaterial.name;
 
         cornerIndex = 0;
         numOfStacks = 0;
@@ -144,10 +149,7 @@ public class Enemy : MonoBehaviour
         else if (collider.tag.Contains(Constant.PLAYER_STRING))
         {
             // Is on bridge, no interraction
-            if (isOnBridge)
-            {
-                return;
-            }
+            
             // Hit player
             if (collider.CompareTag(player.gameObject.tag))
             {
@@ -167,14 +169,16 @@ public class Enemy : MonoBehaviour
             {
                 // Go to new stage
                 case Constant.NEW_STAGE_TAG:
-                    currentStage++;
-                    collider.tag = Constant.UNTAGGED_TAG;
-                    poolController.LoadABrickInMap(currentStage, brick);
-                    isUpgrade = true;
+                    if (!isHitNextStage) {
+                        currentStage++;
+                        poolController.LoadABrickInMap(currentStage, brick);
+                        isUpgrade = true;
+                        isHitNextStage = true;
+                        ChangeTarget();
+                    }
                     break;
                 // Hit finish point
                 case Constant.FINISH_TAG:
-                    collider.tag = Constant.UNTAGGED_TAG;
                     Win();
                     break;
                 // Is on bridge
@@ -189,8 +193,21 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag(Constant.NEW_STAGE_TAG))
+        {
+            isHitNextStage = false;
+        }
+    }
+
     private void CollideWithOthers(Collider collider)
     {
+        if (isOnBridge)
+        {
+            Avoid();
+            return;
+        }
         foreach (Enemy otherEnemy in otherEnemies)
         {
             if (collider.CompareTag(otherEnemy.gameObject.tag))
@@ -207,6 +224,10 @@ public class Enemy : MonoBehaviour
 
     private void CollideWithPlayer()
     {
+        if (isOnBridge)
+        {
+            return;
+        }
         if (thisEnemy.GetNumOfStacks() < player.GetNumOfStacks())
         {
             Fall();
@@ -305,7 +326,8 @@ public class Enemy : MonoBehaviour
     {
         if (Physics.Raycast(enemyTransform.position + Vector3.up * 0.05f, Vector3.forward, out RaycastHit hit, 0.1f, layer_mask))
         {
-            if (hit.collider.tag.Equals(stepTag.ToString()))
+            string hitMatName = poolController.GetMatString(hit.collider.gameObject);
+            if (hitMatName.Contains(stepMatName))
             {
                 return true;
             }
@@ -325,11 +347,9 @@ public class Enemy : MonoBehaviour
 
     private void BuildStep(GameObject colliderObj)
     {
-        Renderer render = poolController.GetMaterial(colliderObj);
+        Renderer render = poolController.GetRenderer(colliderObj);
         render.material = stepMaterial;
         render.enabled = true;
-
-        colliderObj.tag = stepTag.ToString();
 
         SimplePool.DespawnNewest(stackPrefab);
         SimplePool.SpawnOldest(brick);
@@ -356,6 +376,16 @@ public class Enemy : MonoBehaviour
     public int GetNumOfStacks()
     {
         return numOfStacks;
+    }
+
+    IEnumerator Avoid()
+    {
+        agent.enabled = false;
+        agentObstacle.enabled = true;
+        yield return new WaitForSeconds(1.5f);
+        agentObstacle.enabled = false;
+        agent.enabled = true;
+        agent.SetDestination(targetPosition);
     }
 
     private void Fall()
@@ -386,7 +416,8 @@ public class Enemy : MonoBehaviour
     IEnumerator openEndGameMenu()
     {
         yield return new WaitForSeconds(3f);
-        UIManager.Ins.onOpenLoseGameMenu();
+        UIManager.Ins.OpenUI(UIID.UICFail);
+        Time.timeScale = 0;
     }
 }
 

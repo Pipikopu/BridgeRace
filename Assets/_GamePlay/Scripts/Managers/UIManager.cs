@@ -1,31 +1,85 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
+using System.Numerics;
+
+public enum UIID
+{
+    UICGamePlay = 0,
+    UICBlockRaycast = 1,
+    UICMainMenu = 2,
+    UICSetting = 3,
+    UICFail = 4,
+    UICVictory = 5,
+    UICEndGame = 6,
+
+    UICGamePlayFinal = 7,
+    UICBlockRaycastFinal = 8,
+    UICMainMenuFinal = 9,
+    UICSettingFinal = 10,
+    UICFailFinal = 11,
+    UICVictoryFinal = 12,
+    UICEndGameFinal = 13,
+}
+
 
 public class UIManager : Singleton<UIManager>
 {
-    public GameObject endGameMenu;
-    public Text loseText;
-    public Text winText;
 
-    public void onOpenWinGameMenu()
+    private Dictionary<UIID, UICanvas> UICanvas = new Dictionary<UIID, UICanvas>();
+
+    public Transform CanvasParentTF;
+
+    private void Awake()
     {
-        endGameMenu.SetActive(true);
-        loseText.enabled = false;
-        winText.enabled = true;
+        DontDestroyOnLoad(CanvasParentTF.gameObject);
     }
 
-    public void onOpenLoseGameMenu()
+    #region Canvas
+
+    public bool IsOpenedUI(UIID ID)
     {
-        endGameMenu.SetActive(true);
-        loseText.enabled = true;
-        winText.enabled = false;
+        return UICanvas.ContainsKey(ID) && UICanvas[ID] != null && UICanvas[ID].gameObject.activeInHierarchy;
     }
 
-    public void onCloseEgameMenu()
+    public UICanvas GetUI(UIID ID)
     {
-        endGameMenu.SetActive(false);
+        if (!UICanvas.ContainsKey(ID) || UICanvas[ID] == null)
+        {
+            UICanvas canvas = Instantiate(Resources.Load<UICanvas>("UI/" + ID.ToString()), CanvasParentTF);
+            UICanvas[ID] = canvas;
+        }
+
+        return UICanvas[ID];
     }
+
+    public T GetUI<T>(UIID ID) where T : UICanvas
+    {
+        return GetUI(ID) as T;
+    }
+
+    public UICanvas OpenUI(UIID ID)
+    {
+        UICanvas canvas = GetUI(ID);
+
+        canvas.Setup();
+        canvas.Open();
+
+        return canvas;
+    }
+
+    public T OpenUI<T>(UIID ID) where T : UICanvas
+    {
+        return OpenUI(ID) as T;
+    }
+
+    public bool IsOpened(UIID ID)
+    {
+        return UICanvas.ContainsKey(ID) && UICanvas[ID] != null;
+    }
+
+    #endregion
 
 }

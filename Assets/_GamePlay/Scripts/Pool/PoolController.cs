@@ -35,7 +35,7 @@ public class PoolController : MonoBehaviour
 
 
     [Header("Support Variables")]
-    private int currentBrickIndex;
+    private List<int> currentBrickIndex = new List<int>();
     private List<int> sampleMap = new List<int>();
     private Dictionary<GameObject, Renderer> objRenDict = new Dictionary<GameObject, Renderer>();
 
@@ -45,7 +45,8 @@ public class PoolController : MonoBehaviour
         for (int i = 0; i < mapStartPoints.Count; i++)
         {
             mapStagesMatrix.Add(new int[mapSizeZ, mapSizeX]);
-            InitAMapMatrix(mapStagesMatrix[i]);
+            mapStagesMatrix[i] = InitAMapMatrix(mapStagesMatrix[i]);
+            currentBrickIndex.Add(0);
         }
 
         for (int i = 0; i < brickPrefabs.Count; i++)
@@ -64,7 +65,6 @@ public class PoolController : MonoBehaviour
 
     private void Start()
     {
-
         for (int i = 0; i < brickPrefabs.Count; i++)
         {
             LoadABrickInMap(0, brickPrefabs[i]);
@@ -83,7 +83,7 @@ public class PoolController : MonoBehaviour
         }
     }
     
-    private void InitAMapMatrix(int[,] map2D)
+    private int[,] InitAMapMatrix(int[,] map2D)
     {
         InitSampleMapList();
         List<int> newList = sampleMap;
@@ -96,6 +96,7 @@ public class PoolController : MonoBehaviour
                 newList.RemoveAt(index);
             }
         }
+        return map2D;
     }
 
     private void InitSteps()
@@ -126,21 +127,25 @@ public class PoolController : MonoBehaviour
         {
             for (int j = 0; j < mapStagesMatrix[stageIndex].GetLength(1); j++)
             {
-                if (mapStagesMatrix[stageIndex][i, j] == currentBrickIndex)
+                if (mapStagesMatrix[stageIndex][i, j] == currentBrickIndex[stageIndex])
                 {
                     StartCoroutine(spawnDelay(mapStartPoints[stageIndex], brick, i, j));
-
                 }
             }
         }
-        currentBrickIndex++;
-        if (currentBrickIndex == 4) {
-            currentBrickIndex = 0;
+        currentBrickIndex[stageIndex]++;
+        if (currentBrickIndex[stageIndex] == brickPrefabs.Count) {
+            currentBrickIndex[stageIndex] = 0;
         }
     }
 
-    public Renderer GetMaterial(GameObject obj)
+    public Renderer GetRenderer(GameObject obj)
     {
         return objRenDict[obj];
+    }
+
+    public string GetMatString(GameObject obj)
+    {
+        return objRenDict[obj].sharedMaterial.name;
     }
 }

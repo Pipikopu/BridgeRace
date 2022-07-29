@@ -8,7 +8,6 @@ public class LevelManager : MonoBehaviour
     public void Restart()
     {
         SimplePool.ReleaseAll();
-        UIManager.Ins.onOpenLoseGameMenu();
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
@@ -16,7 +15,6 @@ public class LevelManager : MonoBehaviour
     public void NextLevel()
     {
         SimplePool.ReleaseAll();
-        UIManager.Ins.onCloseEgameMenu();
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -34,9 +35,11 @@ public class Player : MonoBehaviour
 
     // Layer mask for step raycast
     private int layer_mask;
+
     // Step variables
     public Constant.StepTags stepTag;
     public Material stepMaterial;
+    private string stepMatName;
 
     // Pool controller
     public PoolController poolController;
@@ -53,6 +56,9 @@ public class Player : MonoBehaviour
     public Transform winTransform;
     public Animator playerAnimator;
 
+    private bool isHitNextStage;
+    private int downStage;
+
     void Start()
     {
         OnInit();
@@ -68,6 +74,9 @@ public class Player : MonoBehaviour
         isWin = false;
         isFall = false;
         isOnBridge = false;
+        isHitNextStage = false;
+        downStage = 0;
+        stepMatName = stepMaterial.name;
 
         layer_mask = LayerMask.GetMask(Constant.MASK_STEP);
     }
@@ -144,9 +153,7 @@ public class Player : MonoBehaviour
             {
                 // Go to new stage
                 case Constant.NEW_STAGE_TAG:
-                    collider.tag = Constant.UNTAGGED_TAG;
-                    currentStage++;
-                    poolController.LoadABrickInMap(currentStage, brick);
+                    CheckNextStage();
                     break;
                 // Hit finish point
                 case Constant.FINISH_TAG:
@@ -161,6 +168,38 @@ public class Player : MonoBehaviour
                 case Constant.GROUND_TAG:
                     isOnBridge = false;
                     break;
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag(Constant.NEW_STAGE_TAG))
+        {
+            isHitNextStage = false;
+        }
+    }
+
+    private void CheckNextStage()
+    {
+        if (!isHitNextStage)
+        {
+            isHitNextStage = true;
+            if (movement.z >= 0)
+            {
+                if (downStage == 0)
+                {
+                    currentStage++;
+                    poolController.LoadABrickInMap(currentStage, brick);
+                }
+                else
+                {
+                    downStage++;
+                }
+            }
+            if (movement.z < 0)
+            {
+                downStage--;
             }
         }
     }
@@ -201,7 +240,8 @@ public class Player : MonoBehaviour
     {
         if (Physics.Raycast(playerTransform.position + Vector3.up * 0.05f, Vector3.forward, out RaycastHit hit, 0.1f, layer_mask))
         {
-            if (hit.collider.tag.Equals(stepTag.ToString()))
+            string hitMatName = poolController.GetMatString(hit.collider.gameObject);
+            if (hitMatName.Contains(stepMatName))
             {
                 return true;
             }
@@ -221,11 +261,9 @@ public class Player : MonoBehaviour
     private void BuildStep(GameObject colliderObj)
     {
         // Set renderer of step
-        Renderer render = poolController.GetMaterial(colliderObj);
+        Renderer render = poolController.GetRenderer(colliderObj);
         render.material = stepMaterial;
         render.enabled = true;
-
-        colliderObj.tag = stepTag.ToString();
 
         SimplePool.DespawnNewest(stackPrefab);
         SimplePool.SpawnOldest(brick);
@@ -300,6 +338,14 @@ public class Player : MonoBehaviour
     IEnumerator openEndGameMenu()
     {
         yield return new WaitForSeconds(3f);
-        UIManager.Ins.onOpenWinGameMenu();
+        Time.timeScale = 0;
+        if (SceneManager.GetActiveScene().buildIndex != SceneManager.sceneCountInBuildSettings - 1)
+        {
+            UIManager.Ins.OpenUI(UIID.UICVictory);
+        }
+        else
+        {
+            UIManager.Ins.OpenUI(UIID.UICEndGame);
+        }
     }
 }

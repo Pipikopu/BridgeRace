@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class JoystickPos : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler
+public class JoystickPos : UICanvas, IDragHandler, IPointerDownHandler, IPointerUpHandler
 {
     public Canvas canvas;
     public Image joystickBackgroundImage;
