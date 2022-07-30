@@ -14,11 +14,6 @@ public class LevelManager : Singleton<LevelManager>
         DontDestroyOnLoad(this);
     }
 
-    private void Update()
-    {
-        Debug.Log(gameState);
-    }
-
     public void Pause()
     {
         gameState = Constant.GameState.PAUSE;
