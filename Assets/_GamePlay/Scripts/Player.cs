@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class Player : MonoBehaviour
     public Rigidbody playerRb;
 
     // Joystick variables
+    public Canvas joystickCanvas;
     public JoytickController joystick;
     private float inputX;
     private float inputZ;
@@ -83,9 +85,18 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (LevelManager.Ins.gameState == Constant.GameState.PAUSE)
+        {
+            joystickCanvas.gameObject.SetActive(false);
+            return;
+        }
+        else
+        {
+            joystickCanvas.gameObject.SetActive(true);
+        }
+
         if (isWin)
         {
-            StartCoroutine(openEndGameMenu());
             return;
         }
         else if (isFall)
@@ -116,6 +127,16 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (LevelManager.Ins.gameState == Constant.GameState.PAUSE)
+        {
+            joystickCanvas.enabled = false;
+            return;
+        }
+        else
+        {
+            joystickCanvas.enabled = true;
+        }
+
         if (!isFall || !isWin)
         {
             MoveCharacter(movement);
@@ -311,6 +332,8 @@ public class Player : MonoBehaviour
         SimplePool.CollectAPool(stackPrefab);
         playerTransform.position = winTransform.position;
         playerAnimator.Play(Constant.ANIM_WIN);
+        StartCoroutine(openEndGameMenu());
+
     }
 
     private void Fall()

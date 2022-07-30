@@ -2,25 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EndGameCanvas : UICanvas
+public class PauseCanvas : UICanvas
 {
-    private void OnEnable()
-    {
-        LevelManager.Ins.Pause();
-        UIManager.Ins.GetUI(UIID.UICGamePlay).Close();
-    }
-
     public void Restart()
     {
-        LevelManager.Ins.Restart();
         UIManager.Ins.OpenUI(UIID.UICGamePlay);
+        LevelManager.Ins.Restart();
+        Close();
+    }
+
+    public void Resume()
+    {
+        UIManager.Ins.OpenUI(UIID.UICGamePlay);
+        LevelManager.Ins.Resume();
         Close();
     }
 
     public void Menu()
     {
-        LevelManager.Ins.BackToMenu();
         UIManager.Ins.OpenUI(UIID.UICMainMenu);
+        LevelManager.Ins.BackToMenu();
         Close();
     }
 }

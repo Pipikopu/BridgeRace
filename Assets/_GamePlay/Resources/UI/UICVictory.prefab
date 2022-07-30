@@ -248,7 +248,7 @@ GameObject:
   - component: {fileID: 4639024332592144862}
   - component: {fileID: 4639024332592144860}
   - component: {fileID: 4639024332592144863}
-  - component: {fileID: 889232993139841476}
+  - component: {fileID: 3464762456197988193}
   m_Layer: 5
   m_Name: UICVictory
   m_TagString: Untagged
@@ -314,7 +314,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &889232993139841476
+--- !u!114 &3464762456197988193
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -606,19 +606,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8889018542827941494, guid: c16282c402147474884c64f8282e926d, type: 3}
-        m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 889232993139841476}
+      - m_Target: {fileID: 3464762456197988193}
         m_TargetAssemblyTypeName: VictoryCanvas, Assembly-CSharp
         m_MethodName: Menu
         m_Mode: 1
@@ -751,19 +739,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8889018542827941493, guid: c16282c402147474884c64f8282e926d, type: 3}
-        m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
-        m_MethodName: Restart
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 889232993139841476}
+      - m_Target: {fileID: 3464762456197988193}
         m_TargetAssemblyTypeName: VictoryCanvas, Assembly-CSharp
         m_MethodName: Restart
         m_Mode: 1
@@ -896,19 +872,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8889018542827941493, guid: c16282c402147474884c64f8282e926d, type: 3}
-        m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
-        m_MethodName: NextLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 889232993139841476}
+      - m_Target: {fileID: 3464762456197988193}
         m_TargetAssemblyTypeName: VictoryCanvas, Assembly-CSharp
         m_MethodName: NextLevel
         m_Mode: 1

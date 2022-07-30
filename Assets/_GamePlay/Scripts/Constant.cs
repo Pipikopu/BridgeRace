@@ -27,4 +27,6 @@ public static class Constant
     public const string VERTICAL_AXIS = "Vertical";
 
     public const string CURRENT_LEVEL_STRING = "CurrentLevel";
+
+    public enum GameState { PAUSE, PLAY };
 }

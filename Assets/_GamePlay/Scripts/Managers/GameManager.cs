@@ -20,7 +20,6 @@ public class GameManager : Singleton<GameManager>
         }
 
         UIManager.Ins.OpenUI(UIID.UICMainMenu);
-        //UIManager.Ins.OpenUI(UIID.UICMainMenuFinal);
 
     }
 }

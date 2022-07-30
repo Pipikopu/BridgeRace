@@ -318,7 +318,7 @@ public class Enemy : MonoBehaviour
         cameraMain.transform.position = Vector3.MoveTowards(cameraMain.transform.position, cameraWinTransform.position, cameraSpeed * Time.deltaTime);
         if (Vector3.Distance(cameraMain.transform.position, cameraWinTransform.position) < 0.1f)
         {
-            StartCoroutine(openEndGameMenu());
+            return;
         }
     }
 
@@ -365,6 +365,8 @@ public class Enemy : MonoBehaviour
         SimplePool.CollectAPool(stackPrefab);
         enemyTransform.position = winTransform.position;
         playerAnimator.Play(Constant.ANIM_WIN);
+        StartCoroutine(openEndGameMenu());
+
     }
 
     private void Stack(GameObject colliderObj)

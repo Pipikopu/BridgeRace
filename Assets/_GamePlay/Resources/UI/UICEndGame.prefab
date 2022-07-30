@@ -121,20 +121,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8889018542827941493, guid: c16282c402147474884c64f8282e926d, type: 3}
-        m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
-        m_MethodName: Restart
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 4525926758230954430}
-        m_TargetAssemblyTypeName: FailCanvas, Assembly-CSharp
+      - m_Target: {fileID: 2795938295736127842}
+        m_TargetAssemblyTypeName: EndGameCanvas, Assembly-CSharp
         m_MethodName: Restart
         m_Mode: 1
         m_Arguments:
@@ -502,20 +490,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8889018542827941493, guid: c16282c402147474884c64f8282e926d, type: 3}
-        m_TargetAssemblyTypeName: LevelManager, Assembly-CSharp
-        m_MethodName: BackToMenu
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 4525926758230954430}
-        m_TargetAssemblyTypeName: FailCanvas, Assembly-CSharp
+      - m_Target: {fileID: 2795938295736127842}
+        m_TargetAssemblyTypeName: EndGameCanvas, Assembly-CSharp
         m_MethodName: Menu
         m_Mode: 1
         m_Arguments:
@@ -616,7 +592,7 @@ GameObject:
   - component: {fileID: 8281045912539570810}
   - component: {fileID: 8281045912539570808}
   - component: {fileID: 8281045912539570809}
-  - component: {fileID: 4525926758230954430}
+  - component: {fileID: 2795938295736127842}
   m_Layer: 5
   m_Name: UICEndGame
   m_TagString: Untagged
@@ -682,7 +658,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4525926758230954430
+--- !u!114 &2795938295736127842
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -691,7 +667,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8281045912539570811}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28273e111862342dda13054ed802cff6, type: 3}
+  m_Script: {fileID: 11500000, guid: 91428a7e166824da0914d8c986c11400, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   IsDestroyOnClose: 0

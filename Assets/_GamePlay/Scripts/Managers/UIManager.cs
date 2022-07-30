@@ -10,18 +10,10 @@ public enum UIID
     UICGamePlay = 0,
     UICBlockRaycast = 1,
     UICMainMenu = 2,
-    UICSetting = 3,
+    UICPause = 3,
     UICFail = 4,
     UICVictory = 5,
     UICEndGame = 6,
-
-    UICGamePlayFinal = 7,
-    UICBlockRaycastFinal = 8,
-    UICMainMenuFinal = 9,
-    UICSettingFinal = 10,
-    UICFailFinal = 11,
-    UICVictoryFinal = 12,
-    UICEndGameFinal = 13,
 }
 
 
