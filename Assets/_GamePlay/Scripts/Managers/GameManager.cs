@@ -6,6 +6,8 @@ using UnityEngine.Events;
 
 public class GameManager : Singleton<GameManager>
 {
+    public UIID startCanvasId;
+
     protected void Awake()
     {
         Input.multiTouchEnabled = false;
@@ -19,7 +21,7 @@ public class GameManager : Singleton<GameManager>
             Screen.SetResolution(Mathf.RoundToInt(ratio * (float)maxScreenHeight), maxScreenHeight, true);
         }
 
-        UIManager.Ins.OpenUI(UIID.UICMainMenu);
-
+        //UIManager.Ins.OpenUI(UIID.UICMainMenu);
+        UIManager.Ins.OpenUI(startCanvasId);
     }
 }

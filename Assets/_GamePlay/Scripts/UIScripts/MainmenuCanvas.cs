@@ -7,14 +7,14 @@ public class MainmenuCanvas : UICanvas
     public void PlayButton()
     {
         LevelManager.Ins.StartGame();
-        UIManager.Ins.OpenUI(UIID.UICGamePlay);
-        Close();
+        //UIManager.Ins.OpenUI(UIID.UICGamePlay);
+        //Close();
     }
 
     public void NewGameButton()
     {
         LevelManager.Ins.NewGame();
-        UIManager.Ins.OpenUI(UIID.UICGamePlay);
-        Close();
+        //UIManager.Ins.OpenUI(UIID.UICGamePlay);
+        //Close();
     }
 }

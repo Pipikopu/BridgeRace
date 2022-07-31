@@ -132,7 +132,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3720779837145322577, guid: c16282c402147474884c64f8282e926d, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3720779837145322577, guid: c16282c402147474884c64f8282e926d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -335,6 +335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7982b1bf326440c3be263d55b1aa41d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startCanvasId: 2
 --- !u!4 &1513935213
 Transform:
   m_ObjectHideFlags: 0
@@ -583,7 +584,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4531927466927100677
 PrefabInstance:
@@ -602,7 +603,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4531927467004019938, guid: d30c0cacee62e4987a283ec8bd33b6f0, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4531927467004019938, guid: d30c0cacee62e4987a283ec8bd33b6f0, type: 3}
       propertyPath: m_AnchorMax.x
@@ -686,7 +687,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4531927467004019942, guid: d30c0cacee62e4987a283ec8bd33b6f0, type: 3}
       propertyPath: m_Name
-      value: Canvas
+      value: UIManager
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d30c0cacee62e4987a283ec8bd33b6f0, type: 3}

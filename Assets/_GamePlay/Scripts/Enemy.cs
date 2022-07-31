@@ -96,6 +96,10 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
+        if(LevelManager.Ins.gameState == Constant.GameState.PAUSE)
+        {
+            return;
+        }
         if (isWin)
         {
             MoveCamera();
@@ -127,6 +131,10 @@ public class Enemy : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (LevelManager.Ins.gameState == Constant.GameState.PAUSE)
+        {
+            return;
+        }
         if (!isFall)
         {
             MoveCharacter(movement);

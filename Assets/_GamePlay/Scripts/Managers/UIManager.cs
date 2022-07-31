@@ -14,6 +14,7 @@ public enum UIID
     UICFail = 4,
     UICVictory = 5,
     UICEndGame = 6,
+    UICLoading = 7,
 }
 
 
@@ -26,7 +27,7 @@ public class UIManager : Singleton<UIManager>
 
     private void Awake()
     {
-        DontDestroyOnLoad(CanvasParentTF.gameObject);
+        //DontDestroyOnLoad(CanvasParentTF.gameObject);
     }
 
     #region Canvas

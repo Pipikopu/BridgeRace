@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Threading.Tasks;
 
 public class LevelManager : Singleton<LevelManager>
 {
@@ -10,8 +11,8 @@ public class LevelManager : Singleton<LevelManager>
 
     private void Awake()
     {
-        gameState = Constant.GameState.PLAY;
-        DontDestroyOnLoad(this);
+        gameState = Constant.GameState.PAUSE;
+        //DontDestroyOnLoad(this);
     }
 
     public void Pause()
@@ -30,7 +31,7 @@ public class LevelManager : Singleton<LevelManager>
     {
         SimplePool.ReleaseAll();
         Time.timeScale = 1;
-        gameState = Constant.GameState.PLAY;
+        gameState = Constant.GameState.PAUSE;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -38,7 +39,7 @@ public class LevelManager : Singleton<LevelManager>
     {
         SimplePool.ReleaseAll();
         Time.timeScale = 1;
-        gameState = Constant.GameState.PLAY;
+        gameState = Constant.GameState.PAUSE;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
@@ -55,14 +56,15 @@ public class LevelManager : Singleton<LevelManager>
     public void StartGame()
     {
         int currentLevel = PlayerPrefs.GetInt(Constant.CURRENT_LEVEL_STRING);
-        gameState = Constant.GameState.PLAY;
+        gameState = Constant.GameState.PAUSE;
+        Time.timeScale = 1;
         if (currentLevel == 0)
         {
             currentLevel = 1;
         }
         SimplePool.ReleaseAll();
-        Time.timeScale = 1;
-        SceneManager.LoadScene(currentLevel);
+        SceneManager.LoadScene(currentLevel, LoadSceneMode.Single);
+        //LoadScene(currentLevel);
     }
 
     public void NewGame()
@@ -70,7 +72,7 @@ public class LevelManager : Singleton<LevelManager>
         PlayerPrefs.SetInt(Constant.CURRENT_LEVEL_STRING, 1);
         SimplePool.ReleaseAll();
         Time.timeScale = 1;
-        gameState = Constant.GameState.PLAY;
+        gameState = Constant.GameState.PAUSE;
         SceneManager.LoadScene(1);
     }
 
@@ -78,4 +80,23 @@ public class LevelManager : Singleton<LevelManager>
     {
         Application.Quit();
     }
+
+    // Test Loading Scene
+    //private async void LoadScene(int sceneIndex)
+    //{
+    //    var scene = SceneManager.LoadSceneAsync(sceneIndex);
+
+    //    scene.allowSceneActivation = false;
+
+    //    UIManager.Ins.OpenUI(UIID.UICLoading);
+
+    //    do
+    //    {
+    //        await Task.Delay(100);
+    //    } while (scene.progress < 0.9f);
+
+    //    scene.allowSceneActivation = true;
+    //    UIManager.Ins.GetUI(UIID.UICLoading).Close();
+    //    UIManager.Ins.OpenUI(UIID.UICGamePlay);
+    //}
 }

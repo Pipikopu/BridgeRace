@@ -13,21 +13,21 @@ public class VictoryCanvas : UICanvas
     public void Restart()
     {
         LevelManager.Ins.Restart();
-        UIManager.Ins.OpenUI(UIID.UICGamePlay);
-        Close();
+        //UIManager.Ins.OpenUI(UIID.UICGamePlay);
+        //Close();
     }
 
     public void NextLevel()
     {
         LevelManager.Ins.NextLevel();
-        UIManager.Ins.OpenUI(UIID.UICGamePlay);
-        Close();
+        //UIManager.Ins.OpenUI(UIID.UICGamePlay);
+        //Close();
     }
 
     public void Menu()
     {
         LevelManager.Ins.BackToMenu();
-        UIManager.Ins.OpenUI(UIID.UICMainMenu);
-        Close();
+        //UIManager.Ins.OpenUI(UIID.UICMainMenu);
+        //Close();
     }
 }
